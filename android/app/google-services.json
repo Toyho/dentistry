@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "445734347099",
+    "firebase_url": "https://dentistry-4e364-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "dentistry-4e364",
+    "storage_bucket": "dentistry-4e364.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445734347099:android:b115b2867d415e2af5fa7e",
+        "android_client_info": {
+          "package_name": "com.example.dentistry"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "445734347099-0q90pnuk3vb11ph8i93221btqrsp34tq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_f65KxnGM9JP5erTTe199WENwZ9tMM2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "445734347099-0q90pnuk3vb11ph8i93221btqrsp34tq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445734347099:android:8faaab0b1e65f35cf5fa7e",
+        "android_client_info": {
+          "package_name": "com.example.dentistry_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "445734347099-0q90pnuk3vb11ph8i93221btqrsp34tq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_f65KxnGM9JP5erTTe199WENwZ9tMM2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "445734347099-0q90pnuk3vb11ph8i93221btqrsp34tq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
