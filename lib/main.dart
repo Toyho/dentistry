@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructor
 import 'package:dentistry/routers/routers.dart';
+import 'package:dentistry/theme/theme_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:overlay_support/overlay_support.dart';
 
@@ -46,41 +48,24 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  Widget _leftSideTransitionScreen(BuildContext context,
-      Animation animation, Animation secondaryAnimation, Widget child) {
-    const begin = Offset(1.0, 0.0);
-    const end = Offset.zero;
-    var curve = Curves.ease;
-    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-    final offsetAnimation = animation.drive(tween);
-    return SlideTransition(
-      position: offsetAnimation,
-      child: child,
-    );
-  }
-  Widget _rightSideTransitionScreen(BuildContext context,
-      Animation animation, Animation secondaryAnimation, Widget child) {
-    const begin = Offset(-1.0, 0.0);
-    const end = Offset.zero;
-    var curve = Curves.ease;
-    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-    final offsetAnimation = animation.drive(tween);
-    return SlideTransition(
-      position: offsetAnimation,
-      child: child,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     final _appRoute = AppRouter();
 
     return OverlaySupport.global(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        // theme: lightThemeData(context),
-        onGenerateRoute: _appRoute.onGenerateRoute,
+      child: BlocProvider<ThemeBloc>(
+        create: (context) => ThemeBloc(),
+        child: BlocBuilder<ThemeBloc, ThemeState>(
+          builder: (context, state) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Flutter Demo',
+              theme: state.currentTheme,
+              onGenerateRoute: _appRoute.onGenerateRoute,
+            );
+          },
+        ),
       ),
     );
   }
