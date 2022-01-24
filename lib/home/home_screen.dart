@@ -115,7 +115,7 @@ class HomeScreen extends StatelessWidget {
                           (context, index) {
                             Post posts;
                             posts = Post.fromJson(
-                                (snapshot.data! as DatabaseEvent)
+                                (snapshot.data!)
                                     .snapshot
                                     .value);
                             return Container(
@@ -126,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                                       color: Colors.grey.withOpacity(0.5),
                                       spreadRadius: 5,
                                       blurRadius: 7,
-                                      offset: Offset(
+                                      offset: const Offset(
                                           0, 3), // changes position of shadow
                                     ),
                                   ],
@@ -136,14 +136,16 @@ class HomeScreen extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 16, bottom: 8, left: 8, right: 8),
+                                    padding: const EdgeInsets.only(
+                                        top: 16, bottom: 8, left: 8, right: 8),
                                     child: Align(
-                                      alignment: Alignment.centerLeft,
+                                        alignment: Alignment.centerLeft,
                                         child: Text(posts.posts![index].text
                                             as String)),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
                                     child: Image.memory(base64Decode(
                                         posts.posts![index].image as String)),
                                   ),
@@ -151,9 +153,9 @@ class HomeScreen extends StatelessWidget {
                               ),
                             );
                           },
-                          childCount: 3,
+                          childCount: snapshot.data!.snapshot.children.length,
                         ))
-                      : SliverToBoxAdapter(
+                      : const SliverToBoxAdapter(
                           child: Center(child: CircularProgressIndicator())),
                 ],
               );
