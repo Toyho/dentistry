@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
-        children: const [
+        children: [
           HomeScreen(),
           AppointmentsScreen(),
           MessengerScreen(),
