@@ -7,6 +7,9 @@ import 'package:dentistry/resources/colors_res.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'home_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -17,44 +20,45 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final _advancedDrawerController = AdvancedDrawerController();
 
-    return AdvancedDrawer(
-      backdropColor: ColorsRes.fromHex(ColorsRes.primaryColor),
-      controller: _advancedDrawerController,
-      animationCurve: Curves.easeInOut,
-      animationDuration: const Duration(milliseconds: 300),
-      animateChildDecoration: true,
-      rtlOpening: false,
-      disabledGestures: false,
-      childDecoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
-      ),
-      drawer: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 54),
-        child: Column(
-          children: [
-            const CircleAvatar(
-              radius: 65,
-              backgroundImage: NetworkImage(
-                  "https://i.pinimg.com/736x/ef/83/c3/ef83c388247b4c5784e2ae9cea604fd2.jpg"),
+    return BlocProvider<HomeBloc>(
+      create: (_) => HomeBloc()..add(Init()),
+      child: BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          return AdvancedDrawer(
+            backdropColor: ColorsRes.fromHex(ColorsRes.primaryColor),
+            controller: _advancedDrawerController,
+            animationCurve: Curves.easeInOut,
+            animationDuration: const Duration(milliseconds: 300),
+            animateChildDecoration: true,
+            rtlOpening: false,
+            disabledGestures: false,
+            childDecoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(16)),
             ),
-            const SizedBox(
-              height: 12,
+            drawer: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 54),
+              child: Column(
+                children: [
+                  const CircleAvatar(
+                    radius: 65,
+                    backgroundImage: NetworkImage(
+                        "https://firebasestorage.googleapis.com/v0/b/dentistry-4e364.appspot.com/o/image.png?alt=media&token=74289142-b9d2-41e2-91b7-383c91975259"),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    "Ильин Илья",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: ColorsRes.fromHex(ColorsRes.whiteColor)),
+                  )
+                ],
+              ),
             ),
-            Text(
-              "Ильин Илья",
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: ColorsRes.fromHex(ColorsRes.whiteColor)),
-            )
-          ],
-        ),
-      ),
-      child: Scaffold(
-        body: StreamBuilder<DatabaseEvent>(
-            stream: _database.child("posts").onValue,
-            builder: (context, snapshot) {
-              return CustomScrollView(
+            child: Scaffold(
+              body: CustomScrollView(
                 slivers: [
                   SliverAppBar(
                     elevation: 0.0,
@@ -109,15 +113,10 @@ class HomeScreen extends StatelessWidget {
                     ),
                     expandedHeight: 130,
                   ),
-                  snapshot.hasData
+                  state.posts != null
                       ? SliverList(
                           delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                            Post posts;
-                            posts = Post.fromJson(
-                                (snapshot.data!)
-                                    .snapshot
-                                    .value);
                             return Container(
                               margin: EdgeInsets.all(16),
                               decoration: BoxDecoration(
@@ -140,26 +139,28 @@ class HomeScreen extends StatelessWidget {
                                         top: 16, bottom: 8, left: 8, right: 8),
                                     child: Align(
                                         alignment: Alignment.centerLeft,
-                                        child: Text(posts.posts![index].text
-                                            as String)),
+                                        child: Text(state.posts?.posts![index]
+                                            .text as String)),
                                   ),
                                   Padding(
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 8),
-                                    child: Image.memory(base64Decode(
-                                        posts.posts![index].image as String)),
+                                    child: Image.network(state
+                                        .posts?.posts![index].image as String),
                                   ),
                                 ],
                               ),
                             );
                           },
-                          childCount: snapshot.data!.snapshot.children.length,
+                          childCount: state.posts?.posts!.length,
                         ))
                       : const SliverToBoxAdapter(
                           child: Center(child: CircularProgressIndicator())),
                 ],
-              );
-            }),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

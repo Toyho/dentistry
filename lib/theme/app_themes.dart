@@ -1,3 +1,4 @@
+import 'package:dentistry/resources/colors_res.dart';
 import 'package:flutter/material.dart';
 
 ThemeData lightTheme = ThemeData(
@@ -18,7 +19,10 @@ ThemeData lightTheme = ThemeData(
         900: Color(0xff936F3E)
       },
     ),
-    primaryColor: Color(0xffEDD5B3),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: ColorsRes.fromHex(ColorsRes.primaryColor)
+    ),
+    primaryColor: ColorsRes.fromHex(ColorsRes.primaryColor),
     primaryColorBrightness: Brightness.light,
     primaryColorLight: Color(0x1aF5E0C3),
     primaryColorDark: Color(0xff936F3E),
@@ -48,6 +52,9 @@ ThemeData darkTheme = ThemeData(
         800: Color(0xaf2F1E06),
         900: Color(0xff2F1E06)
       },
+    ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: ColorsRes.fromHex(ColorsRes.whiteColor)
     ),
     primaryColor: Color(0xff5D4524),
     primaryColorBrightness: Brightness.dark,
