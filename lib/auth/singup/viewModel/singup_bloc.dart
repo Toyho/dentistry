@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -41,7 +42,23 @@ class SingupBloc extends Bloc<SingupEvent, SingupState> {
         _fb.reference().child("users").child(_user!.uid).set({
           'email': _user!.email!,
           'password': event.password,
-          "registration_date": formattedDate
+          "registration date": formattedDate,
+          "admin": false,
+          "name": "Лебедев",
+          "lastName": "Максим",
+          "patronymic": "Александрович",
+          "dateOfBirth": "2000-02-13",
+          "passport": "1111 111111",
+          "uid": _user!.uid,
+        });
+
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(_user!.email!)
+            .set({
+          'nickname': "Лебедев Максим",
+          'photoUrl': "https://firebasestorage.googleapis.com/v0/b/dentistry-4e364.appspot.com/o/image.png?alt=media&token=74289142-b9d2-41e2-91b7-383c91975259",
+          'id': _user!.uid
         });
         emit(state.copyWith(
           status: SingupStatus.success,

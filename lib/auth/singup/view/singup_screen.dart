@@ -14,7 +14,7 @@ class SingupScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-  TextEditingController();
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -93,138 +93,140 @@ class SingupScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(20),
                         color: Colors.black.withOpacity(0.5),
                         child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
                             Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              TextsRes.singUp,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 32),
-                            )),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        TextField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            focusColor:
-                            ColorsRes.fromHex(ColorsRes.primaryColor),
-                            border: const OutlineInputBorder(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(12))),
-                            hintText: TextsRes.email,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        TextField(
-                          obscureText: true,
-                          controller: passwordController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            focusColor:
-                            ColorsRes.fromHex(ColorsRes.primaryColor),
-                            border: const OutlineInputBorder(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(12))),
-                            hintText: TextsRes.password,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        TextField(
-                          obscureText: true,
-                          controller: confirmPasswordController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            focusColor:
-                            ColorsRes.fromHex(ColorsRes.primaryColor),
-                            border: const OutlineInputBorder(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(12))),
-                            hintText: TextsRes.repeatPassword,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Text.rich(TextSpan(children: [
-                          TextSpan(
-                              text: TextsRes.privacyAndPolicy1,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16)),
-                          TextSpan(
-                              text: TextsRes.privacyAndPolicy2,
-                              style: TextStyle(
-                                  color:
-                                  ColorsRes.fromHex(ColorsRes.primaryColor),
-                                  fontSize: 16))
-                        ])),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        SizedBox(
-                          height: 56,
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: AnimatedContainer(
-                              width: state.status == SingupStatus.loading
-                                  ? 56
-                                  : 300,
-                              height: 56,
-                              duration: const Duration(milliseconds: 300),
-                              child: RaisedButton(
-                                  padding: const EdgeInsets.all(16.0),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(12.0)),
-                                  color:
-                                  ColorsRes.fromHex(ColorsRes.primaryColor),
-                                  textColor: Colors.white,
-                                  child: state.status == SingupStatus.loading
-                                      ? const SizedBox(
-                                    height: 48,
-                                    width: 48,
-                                    child: CircularProgressIndicator(
-                                      valueColor:
-                                      AlwaysStoppedAnimation<Color>(
-                                          Colors.white),
-                                      value: null,
-                                      strokeWidth: 1.0,
-                                    ),
-                                  )
-                                      : Text(TextsRes.makeSingUp,
-                                      style: const TextStyle(fontSize: 16)),
-                              onPressed: () {
-                                context.read<SingupBloc>().add(
-                                    SignUpWithEmailAndPassword(
-                                        email: emailController.text
-                                            .replaceAll(" ", ""),
-                                        password: passwordController.text,
-                                        confirmPassword: confirmPasswordController
-                                            .text));
-                              },
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  TextsRes.singUp,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 32),
+                                )),
+                            const SizedBox(
+                              height: 16,
                             ),
-                          ),
+                            TextField(
+                              controller: emailController,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                focusColor:
+                                    ColorsRes.fromHex(ColorsRes.primaryColor),
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12))),
+                                hintText: TextsRes.email,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            TextField(
+                              obscureText: true,
+                              controller: passwordController,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                focusColor:
+                                    ColorsRes.fromHex(ColorsRes.primaryColor),
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12))),
+                                hintText: TextsRes.password,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            TextField(
+                              obscureText: true,
+                              controller: confirmPasswordController,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                focusColor:
+                                    ColorsRes.fromHex(ColorsRes.primaryColor),
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12))),
+                                hintText: TextsRes.repeatPassword,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            Text.rich(TextSpan(children: [
+                              TextSpan(
+                                  text: TextsRes.privacyAndPolicy1,
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 16)),
+                              TextSpan(
+                                  text: TextsRes.privacyAndPolicy2,
+                                  style: TextStyle(
+                                      color: ColorsRes.fromHex(
+                                          ColorsRes.primaryColor),
+                                      fontSize: 16))
+                            ])),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            SizedBox(
+                              height: 56,
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: AnimatedContainer(
+                                  width: state.status == SingupStatus.loading
+                                      ? 56
+                                      : MediaQuery.of(context).size.height,
+                                  height: 56,
+                                  duration: const Duration(milliseconds: 300),
+                                  child: RaisedButton(
+                                    padding: const EdgeInsets.all(16.0),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    color: ColorsRes.fromHex(
+                                        ColorsRes.primaryColor),
+                                    textColor: Colors.white,
+                                    child: state.status == SingupStatus.loading
+                                        ? const SizedBox(
+                                            height: 48,
+                                            width: 48,
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Colors.white),
+                                              value: null,
+                                              strokeWidth: 1.0,
+                                            ),
+                                          )
+                                        : Text(TextsRes.makeSingUp,
+                                            style:
+                                                const TextStyle(fontSize: 16)),
+                                    onPressed: () {
+                                      context.read<SingupBloc>().add(
+                                          SignUpWithEmailAndPassword(
+                                              email: emailController.text
+                                                  .replaceAll(" ", ""),
+                                              password: passwordController.text,
+                                              confirmPassword:
+                                                  confirmPasswordController
+                                                      .text));
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      ],
                     ),
                   ),
                 ),
               ),
-            ),)
-            ,
             );
           },
         ),

@@ -13,7 +13,6 @@ class AppointmentsScreen extends StatelessWidget {
           SliverAppBar(
             elevation: 0.0,
             pinned: true,
-            backgroundColor: ColorsRes.fromHex(ColorsRes.whiteColor),
             automaticallyImplyLeading: false,
             flexibleSpace: CustomizableSpaceBar(
               builder: (context, scrollingRate) {

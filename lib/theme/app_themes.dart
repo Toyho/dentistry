@@ -4,14 +4,17 @@ import 'package:flutter/material.dart';
 ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     visualDensity: const VisualDensity(vertical: 0.5, horizontal: 0.5),
+    textTheme: TextTheme(
+
+    ),
     primarySwatch: const MaterialColor(
-      0xFFF5E0C3,
+      0xFF6f94fe,
       <int, Color>{
-        50: Color(0x1aF5E0C3),
-        100: Color(0xa1F5E0C3),
-        200: Color(0xaaF5E0C3),
-        300: Color(0xafF5E0C3),
-        400: Color(0xffF5E0C3),
+        50: Color(0x1a6f94fe),
+        100: Color(0xa16f94fe),
+        200: Color(0xaa6f94fe),
+        300: Color(0xaf6f94fe),
+        400: Color(0xff6f94fe),
         500: Color(0xffEDD5B3),
         600: Color(0xffDEC29B),
         700: Color(0xffC9A87C),
@@ -19,27 +22,37 @@ ThemeData lightTheme = ThemeData(
         900: Color(0xff936F3E)
       },
     ),
+    indicatorColor: ColorsRes.fromHex(ColorsRes.primaryColor),
     progressIndicatorTheme: ProgressIndicatorThemeData(
-      color: ColorsRes.fromHex(ColorsRes.primaryColor)
-    ),
+        color: ColorsRes.fromHex(ColorsRes.primaryColor)),
+    tabBarTheme: TabBarTheme(
+        labelColor: ColorsRes.fromHex(ColorsRes.eerieBlackColor),
+        labelStyle:
+            TextStyle(color: ColorsRes.fromHex(ColorsRes.whiteColor))),
     primaryColor: ColorsRes.fromHex(ColorsRes.primaryColor),
     primaryColorBrightness: Brightness.light,
-    primaryColorLight: Color(0x1aF5E0C3),
+    primaryColorLight: Color(0x1a6f94fe),
     primaryColorDark: Color(0xff936F3E),
-    canvasColor: Color(0xffE09E45),
+    canvasColor: ColorsRes.fromHex(ColorsRes.primaryColor),
+    appBarTheme: AppBarTheme(
+      color: Colors.white,
+    ),
     accentColor: Color(0xff457BE0),
     accentColorBrightness: Brightness.light,
-    scaffoldBackgroundColor: Colors.white,
-    bottomAppBarColor: Colors.white,
-    cardColor: Color(0xaaF5E0C3),
+    scaffoldBackgroundColor: ColorsRes.fromHex(ColorsRes.whiteColor),
+    bottomAppBarColor: ColorsRes.fromHex(ColorsRes.whiteColor),
+    cardColor: ColorsRes.fromHex(ColorsRes.whiteColor),
     dividerColor: Color(0x1f6D42CE),
-    focusColor: Color(0x1aF5E0C3));
+    focusColor: Color(0x1a6f94fe));
 
 ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     visualDensity: VisualDensity(vertical: 0.5, horizontal: 0.5),
-    primarySwatch: MaterialColor(
-      0xFFF5E0C3,
+    textTheme: TextTheme(
+
+    ),
+    primarySwatch: const MaterialColor(
+      0xFF6f94fe,
       <int, Color>{
         50: Color(0x1a5D4524),
         100: Color(0xa15D4524),
@@ -53,18 +66,25 @@ ThemeData darkTheme = ThemeData(
         900: Color(0xff2F1E06)
       },
     ),
+    indicatorColor: ColorsRes.fromHex(ColorsRes.primaryColor),
+    tabBarTheme: TabBarTheme(
+        labelColor: ColorsRes.fromHex(ColorsRes.whiteColor),
+        labelStyle:
+            TextStyle(color: ColorsRes.fromHex(ColorsRes.eerieBlackColor))),
     progressIndicatorTheme: ProgressIndicatorThemeData(
-        color: ColorsRes.fromHex(ColorsRes.whiteColor)
-    ),
+        color: ColorsRes.fromHex(ColorsRes.whiteColor)),
     primaryColor: Color(0xff5D4524),
     primaryColorBrightness: Brightness.dark,
     primaryColorLight: Color(0x1a311F06),
     primaryColorDark: Color(0xff936F3E),
-    canvasColor: Color(0xffE09E45),
-    accentColor: Color(0xff457BE0),
+    canvasColor: ColorsRes.fromHex(ColorsRes.codBlackColor),
+    appBarTheme: AppBarTheme(
+      color: ColorsRes.fromHex(ColorsRes.eerieBlackColor),
+    ),
+    accentColor: Color(0x383535FF),
     accentColorBrightness: Brightness.dark,
-    scaffoldBackgroundColor: Color(0xffB5BFD3),
-    bottomAppBarColor: Color(0xff6D42CE),
-    cardColor: Color(0xaa311F06),
+    scaffoldBackgroundColor: ColorsRes.fromHex(ColorsRes.codBlackColor),
+    bottomAppBarColor: ColorsRes.fromHex(ColorsRes.eerieBlackColor),
+    cardColor: ColorsRes.fromHex(ColorsRes.eerieBlackColor),
     dividerColor: Color(0x1f6D42CE),
     focusColor: Color(0x1a311F06));

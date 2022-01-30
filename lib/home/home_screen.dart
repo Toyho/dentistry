@@ -1,31 +1,27 @@
-import 'dart:convert';
-
 import 'package:customizable_space_bar/customizable_space_bar.dart';
 import 'package:dentistry/google_map/google_map_screen.dart';
-import 'package:dentistry/models/posts/post_model.dart';
 import 'package:dentistry/resources/colors_res.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:dentistry/theme/app_themes.dart';
+import 'package:dentistry/theme/settings_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'home_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
-
-  final _database = FirebaseDatabase.instance.ref();
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final _advancedDrawerController = AdvancedDrawerController();
 
     return BlocProvider<HomeBloc>(
-      create: (_) => HomeBloc()..add(Init()),
+      create: (_) => HomeBloc()..add(GetPosts()),
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return AdvancedDrawer(
-            backdropColor: ColorsRes.fromHex(ColorsRes.primaryColor),
             controller: _advancedDrawerController,
             animationCurve: Curves.easeInOut,
             animationDuration: const Duration(milliseconds: 300),
@@ -39,10 +35,15 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 54),
               child: Column(
                 children: [
-                  const CircleAvatar(
-                    radius: 65,
-                    backgroundImage: NetworkImage(
-                        "https://firebasestorage.googleapis.com/v0/b/dentistry-4e364.appspot.com/o/image.png?alt=media&token=74289142-b9d2-41e2-91b7-383c91975259"),
+                  GestureDetector(
+                    onTap: () {
+                      context.read<HomeBloc>().add(ChangeAvatar());
+                    },
+                    child: const CircleAvatar(
+                      radius: 65,
+                      backgroundImage: NetworkImage(
+                          "https://firebasestorage.googleapis.com/v0/b/dentistry-4e364.appspot.com/o/image.png?alt=media&token=74289142-b9d2-41e2-91b7-383c91975259"),
+                    ),
                   ),
                   const SizedBox(
                     height: 12,
@@ -53,7 +54,12 @@ class HomeScreen extends StatelessWidget {
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                         color: ColorsRes.fromHex(ColorsRes.whiteColor)),
-                  )
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        context.read<SettingsBloc>().add(CurrentAppTheme());
+                      },
+                      child: Text("theme"))
                 ],
               ),
             ),
@@ -63,7 +69,6 @@ class HomeScreen extends StatelessWidget {
                   SliverAppBar(
                     elevation: 0.0,
                     pinned: true,
-                    backgroundColor: ColorsRes.fromHex(ColorsRes.whiteColor),
                     automaticallyImplyLeading: false,
                     leading: IconButton(
                       onPressed: () => _advancedDrawerController.showDrawer(),
@@ -84,6 +89,8 @@ class HomeScreen extends StatelessWidget {
                     actions: [
                       IconButton(
                           onPressed: () {
+                            PackageInfo.fromPlatform()
+                                .then((value) => print(value.version));
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -121,17 +128,18 @@ class HomeScreen extends StatelessWidget {
                               margin: EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                   boxShadow: [
+                                    context.read<SettingsBloc>().state.currentTheme == lightTheme ?
                                     BoxShadow(
                                       color: Colors.grey.withOpacity(0.5),
                                       spreadRadius: 5,
                                       blurRadius: 7,
-                                      offset: const Offset(
-                                          0, 3), // changes position of shadow
-                                    ),
+                                      offset: Offset(0,
+                                          3), // changes position of shadow
+                                    ) : BoxShadow(),
                                   ],
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(12)),
-                                  color: Colors.white),
+                                  color: Theme.of(context).cardColor),
                               child: Column(
                                 children: [
                                   Padding(

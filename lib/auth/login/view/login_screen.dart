@@ -134,7 +134,7 @@ class LoginScreen extends StatelessWidget {
                                 child: AnimatedContainer(
                                   width: state.status == LoginStatus.loading
                                       ? 56
-                                      : 300,
+                                      : MediaQuery.of(context).size.height,
                                   height: 56,
                                   duration: const Duration(milliseconds: 300),
                                   child: RaisedButton(

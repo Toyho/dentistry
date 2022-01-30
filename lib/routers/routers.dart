@@ -1,5 +1,6 @@
 import 'package:dentistry/auth/auth_screen.dart';
 import 'package:dentistry/main/main_screen.dart';
+import 'package:dentistry/messenger/detailMessenger/detail_messenger_screen.dart';
 import 'package:dentistry/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,6 +47,19 @@ class AppRouter {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
             const MainScreen(),
+            transitionDuration: Duration(milliseconds: 700),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) =>
+                _leftSideTransitionScreen(
+                    context, animation, secondaryAnimation, child),
+            settings: routeSettings,
+          );
+        }
+      case "/detail_messenger_screen":
+        {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+            DetailMessengerScreen(),
             transitionDuration: Duration(milliseconds: 700),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) =>
