@@ -3,10 +3,12 @@ import 'package:dentistry/google_map/google_map_screen.dart';
 import 'package:dentistry/resources/colors_res.dart';
 import 'package:dentistry/theme/app_themes.dart';
 import 'package:dentistry/theme/settings_bloc.dart';
+import 'package:dentistry/user_state/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'home_bloc.dart';
 
@@ -16,6 +18,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _advancedDrawerController = AdvancedDrawerController();
+
+    final userState = context.read<UserBloc>().state;
 
     return BlocProvider<HomeBloc>(
       create: (_) => HomeBloc()..add(GetPosts()),
@@ -39,17 +43,17 @@ class HomeScreen extends StatelessWidget {
                     onTap: () {
                       context.read<HomeBloc>().add(ChangeAvatar());
                     },
-                    child: const CircleAvatar(
+                    child: CircleAvatar(
                       radius: 65,
                       backgroundImage: NetworkImage(
-                          "https://firebasestorage.googleapis.com/v0/b/dentistry-4e364.appspot.com/o/image.png?alt=media&token=74289142-b9d2-41e2-91b7-383c91975259"),
+                          context.read<UserBloc>().state.userAvatar!),
                     ),
                   ),
                   const SizedBox(
                     height: 12,
                   ),
                   Text(
-                    "Ильин Илья",
+                    userState.name! + " " + userState.lastName!,
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -59,7 +63,13 @@ class HomeScreen extends StatelessWidget {
                       onPressed: () {
                         context.read<SettingsBloc>().add(CurrentAppTheme());
                       },
-                      child: Text("theme"))
+                      child: Text("theme")),
+                  TextButton(
+                      onPressed: () {
+                        context.read<UserBloc>().add(DeleteUserInfo());
+                        Navigator.pushReplacementNamed(context, "/sing_out");
+                      },
+                      child: Text("sing out")),
                 ],
               ),
             ),
@@ -80,7 +90,7 @@ class HomeScreen extends StatelessWidget {
                             child: Icon(
                               value.visible ? Icons.clear : Icons.menu,
                               key: ValueKey<bool>(value.visible),
-                              color: ColorsRes.fromHex(ColorsRes.primaryColor),
+                              color: Theme.of(context).iconTheme.color,
                             ),
                           );
                         },
@@ -98,7 +108,7 @@ class HomeScreen extends StatelessWidget {
                           },
                           icon: Icon(
                             Icons.location_on_outlined,
-                            color: ColorsRes.fromHex(ColorsRes.primaryColor),
+                            color: Theme.of(context).iconTheme.color,
                           ))
                     ],
                     flexibleSpace: CustomizableSpaceBar(
@@ -120,22 +130,27 @@ class HomeScreen extends StatelessWidget {
                     ),
                     expandedHeight: 130,
                   ),
-                  state.posts != null
-                      ? SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            return Container(
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return state.posts != null
+                          ? Container(
                               margin: EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                   boxShadow: [
-                                    context.read<SettingsBloc>().state.currentTheme == lightTheme ?
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(0,
-                                          3), // changes position of shadow
-                                    ) : BoxShadow(),
+                                    context
+                                                .read<SettingsBloc>()
+                                                .state
+                                                .currentTheme ==
+                                            lightTheme
+                                        ? BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 5,
+                                            blurRadius: 7,
+                                            offset: Offset(0,
+                                                3), // changes position of shadow
+                                          )
+                                        : BoxShadow(),
                                   ],
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(12)),
@@ -153,17 +168,88 @@ class HomeScreen extends StatelessWidget {
                                   Padding(
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 8),
-                                    child: Image.network(state
-                                        .posts?.posts![index].image as String),
+                                    child: Image.network(
+                                        state.posts?.posts![index].image
+                                            as String,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.grey[300]!,
+                                        highlightColor: Colors.grey[100]!,
+                                        child: Container(
+                                          height: 200,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }),
                                   ),
                                 ],
                               ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      context
+                                                  .read<SettingsBloc>()
+                                                  .state
+                                                  .currentTheme ==
+                                              lightTheme
+                                          ? BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.5),
+                                              spreadRadius: 5,
+                                              blurRadius: 7,
+                                              offset: Offset(0,
+                                                  3), // changes position of shadow
+                                            )
+                                          : BoxShadow(),
+                                    ],
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12)),
+                                    color: Theme.of(context).cardColor),
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: 20,
+                                        width: 120,
+                                        margin: EdgeInsets.only(
+                                            top: 16,
+                                            bottom: 8,
+                                            left: 8,
+                                            right: 8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12)),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 200,
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 8),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             );
-                          },
-                          childCount: state.posts?.posts!.length,
-                        ))
-                      : const SliverToBoxAdapter(
-                          child: Center(child: CircularProgressIndicator())),
+                    },
+                    childCount:
+                        state.posts != null ? state.posts?.posts!.length : 10,
+                  )),
                 ],
               ),
             ),

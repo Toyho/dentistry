@@ -1,18 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dentistry/resources/colors_res.dart';
+import 'package:dentistry/user_state/user_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class DetailMessengerScreen extends StatelessWidget {
-  DetailMessengerScreen({Key? key}) : super(key: key);
+  DetailMessengerScreen(String this.idChat, {Key? key}) : super(key: key);
+  String? idChat;
 
   TextEditingController textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final userState = context.read<UserBloc>().state;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         flexibleSpace: SafeArea(
           child: Container(
             padding: EdgeInsets.only(right: 16),
@@ -24,7 +30,7 @@ class DetailMessengerScreen extends StatelessWidget {
                   },
                   icon: Icon(
                     Icons.arrow_back,
-                    color: Colors.black,
+                    color: Theme.of(context).iconTheme.color,
                   ),
                 ),
                 SizedBox(
@@ -59,10 +65,6 @@ class DetailMessengerScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.settings,
-                  color: Colors.black54,
-                ),
               ],
             ),
           ),
@@ -73,46 +75,55 @@ class DetailMessengerScreen extends StatelessWidget {
           StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('messages')
-                  .doc("111")
-                  .collection("111").orderBy('date', descending: true)
+                  .doc(idChat)
+                  .collection("messages")
+                  .orderBy('created', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
-                  print(snapshot.data!.docs[0].data());
-                  List<DocumentSnapshot> items = snapshot.data!.docs;
-                  print(items);
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      reverse: true,
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
-                      physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot ds = snapshot.data!.docs[index];
-                        return Container(
-                          padding: EdgeInsets.only(
-                              left: 14, right: 14, top: 10, bottom: 10),
-                          child: Align(
-                            alignment: (ds['id'] == "Q6twsqnTqpaWt96H9D48n0oAe1f"
-                                ? Alignment.topRight
-                                : Alignment.topLeft),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: (ds['id'] == "Q6twsqnTqpaWt96H9D48n0oAe1f"
-                                    ? Colors.blue[200]
-                                    : Colors.grey.shade200),
-                              ),
-                              padding: EdgeInsets.all(16),
-                              child: Text(
-                                ds['mess'],
+                  if (snapshot.data!.docs.isNotEmpty) {
+                    print(snapshot.data!.docs[0].data());
+                    List<DocumentSnapshot> items = snapshot.data!.docs;
+                    print(items);
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        reverse: true,
+                        padding: EdgeInsets.only(top: 10, bottom: 10),
+                        physics: BouncingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot ds = snapshot.data!.docs[index];
+                          return Container(
+                            padding: EdgeInsets.only(
+                                left: 14, right: 14, top: 10, bottom: 10),
+                            child: Align(
+                              alignment: (ds['uid'] == userState.userUID
+                                  ? Alignment.topRight
+                                  : Alignment.topLeft),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: (ds['uid'] == userState.userUID
+                                      ? Colors.blue[200]
+                                      : Colors.grey.shade200),
+                                ),
+                                padding: EdgeInsets.all(16),
+                                child: Text(
+                                  ds['msg'],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
+                          );
+                        },
+                      ),
+                    );
+                  } else {
+                    return Expanded(
+                      child: Center(
+                        child: Text("Напишите ваше первое сообщение"),
+                      ),
+                    );
+                  }
                 } else {
                   return CircularProgressIndicator();
                 }
@@ -161,12 +172,19 @@ class DetailMessengerScreen extends StatelessWidget {
                     onPressed: () {
                       FirebaseFirestore.instance
                           .collection('messages')
-                          .doc("111")
-                          .collection("111")
+                          .doc(idChat)
+                          .collection("messages")
                           .add({
-                        'mess': textEditingController.text,
-                        'date': FieldValue.serverTimestamp(),
-                        'id': "Q6twsqnTqpaWt96H9D48n0oAe1f"
+                        'msg': textEditingController.text,
+                        'created': FieldValue.serverTimestamp(),
+                        'uid': userState.userUID
+                      });
+                      FirebaseFirestore.instance
+                          .collection('messages')
+                          .doc(idChat)
+                          .update({
+                        'lastTime': FieldValue.serverTimestamp(),
+                        'lastMsg': textEditingController.text
                       });
                       textEditingController.clear();
                     },

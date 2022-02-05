@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructor
 import 'package:dentistry/routers/routers.dart';
 import 'package:dentistry/theme/settings_bloc.dart';
+import 'package:dentistry/user_state/user_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -61,8 +62,11 @@ class MyApp extends StatelessWidget {
     final _appRoute = AppRouter();
 
     return OverlaySupport.global(
-      child: BlocProvider<SettingsBloc>(
-        create: (context) => SettingsBloc(),
+      child: MultiBlocProvider(
+        providers: [
+            BlocProvider(create: (context) => SettingsBloc()),
+            BlocProvider(create: (context) => UserBloc()),
+        ],
         child: BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, state) {
             return MaterialApp(

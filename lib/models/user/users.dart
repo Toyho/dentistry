@@ -36,6 +36,7 @@ class Users {
   String? _patronymic;
   String? _registrationDate;
   String? _uid;
+  String? _avatar;
 
   bool? get admin => _admin;
   String? get dateOfBirth => _dateOfBirth;
@@ -47,6 +48,7 @@ class Users {
   String? get patronymic => _patronymic;
   String? get registrationDate => _registrationDate;
   String? get uid => _uid;
+  String? get avatar => _avatar;
 
   Users({
     bool? admin,
@@ -58,7 +60,8 @@ class Users {
     String? password,
     String? patronymic,
     String? registrationDate,
-    String? uid}){
+    String? uid,
+    String? avatar}){
     _admin = admin;
     _dateOfBirth = dateOfBirth;
     _email = email;
@@ -69,6 +72,7 @@ class Users {
     _patronymic = patronymic;
     _registrationDate = registrationDate;
     _uid = uid;
+    _avatar = avatar;
 }
 
   Users.fromJson(dynamic json) {
@@ -82,6 +86,7 @@ class Users {
     _patronymic = json['patronymic'];
     _registrationDate = json['registration date'];
     _uid = json['uid'];
+    _avatar = json['avatar'];
   }
 
   Map<String, dynamic> toJson() {
@@ -96,6 +101,7 @@ class Users {
     map['patronymic'] = _patronymic;
     map['registration date'] = _registrationDate;
     map['uid'] = _uid;
+    map['avatar'] = _avatar;
     return map;
   }
 

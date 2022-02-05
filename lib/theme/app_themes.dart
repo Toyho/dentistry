@@ -5,7 +5,15 @@ ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     visualDensity: const VisualDensity(vertical: 0.5, horizontal: 0.5),
     textTheme: TextTheme(
-
+      headline6: TextStyle(
+        color: Colors.black,
+        fontSize: 14,
+        fontWeight: FontWeight.w500
+      ),
+      subtitle1: TextStyle(
+          color: Colors.grey,
+          fontSize: 12
+      ),
     ),
     primarySwatch: const MaterialColor(
       0xFF6f94fe,
@@ -21,6 +29,9 @@ ThemeData lightTheme = ThemeData(
         800: Color(0xffB28E5E),
         900: Color(0xff936F3E)
       },
+    ),
+    iconTheme: IconThemeData(
+      color: ColorsRes.fromHex(ColorsRes.primaryColor)
     ),
     indicatorColor: ColorsRes.fromHex(ColorsRes.primaryColor),
     progressIndicatorTheme: ProgressIndicatorThemeData(
@@ -49,7 +60,15 @@ ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     visualDensity: VisualDensity(vertical: 0.5, horizontal: 0.5),
     textTheme: TextTheme(
-
+      headline6: TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.w500
+      ),
+      subtitle1: TextStyle(
+          color: Colors.grey,
+          fontSize: 12
+      ),
     ),
     primarySwatch: const MaterialColor(
       0xFF6f94fe,
@@ -65,6 +84,9 @@ ThemeData darkTheme = ThemeData(
         800: Color(0xaf2F1E06),
         900: Color(0xff2F1E06)
       },
+    ),
+    iconTheme: IconThemeData(
+        color: ColorsRes.fromHex(ColorsRes.whiteColor)
     ),
     indicatorColor: ColorsRes.fromHex(ColorsRes.primaryColor),
     tabBarTheme: TabBarTheme(

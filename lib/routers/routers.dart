@@ -1,4 +1,6 @@
+import 'package:dentistry/appointmets/create_appointments/create_appointments_screen.dart';
 import 'package:dentistry/auth/auth_screen.dart';
+import 'package:dentistry/create_profile/create_profile_screen.dart';
 import 'package:dentistry/main/main_screen.dart';
 import 'package:dentistry/messenger/detailMessenger/detail_messenger_screen.dart';
 import 'package:dentistry/splash/splash_screen.dart';
@@ -6,9 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRouter {
-
-  Widget _leftSideTransitionScreen(BuildContext context,
-      Animation animation, Animation secondaryAnimation, Widget child) {
+  Widget _leftSideTransitionScreen(BuildContext context, Animation animation,
+      Animation secondaryAnimation, Widget child) {
     const begin = Offset(1.0, 0.0);
     const end = Offset.zero;
     var curve = Curves.ease;
@@ -19,8 +20,9 @@ class AppRouter {
       child: child,
     );
   }
-  Widget _rightSideTransitionScreen(BuildContext context,
-      Animation animation, Animation secondaryAnimation, Widget child) {
+
+  Widget _rightSideTransitionScreen(BuildContext context, Animation animation,
+      Animation secondaryAnimation, Widget child) {
     const begin = Offset(-1.0, 0.0);
     const end = Offset.zero;
     var curve = Curves.ease;
@@ -33,9 +35,9 @@ class AppRouter {
   }
 
   Route? onGenerateRoute(RouteSettings routeSettings) {
-    var path = routeSettings.name!;
+    var path = routeSettings.name!.split('|');
 
-    switch (path) {
+    switch (path[0]) {
       case "/":
         {
           return MaterialPageRoute(
@@ -46,12 +48,12 @@ class AppRouter {
         {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-            const MainScreen(),
+                const MainScreen(),
             transitionDuration: Duration(milliseconds: 700),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) =>
-                _leftSideTransitionScreen(
-                    context, animation, secondaryAnimation, child),
+                    _leftSideTransitionScreen(
+                        context, animation, secondaryAnimation, child),
             settings: routeSettings,
           );
         }
@@ -59,12 +61,12 @@ class AppRouter {
         {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-            DetailMessengerScreen(),
+                DetailMessengerScreen(path[1]),
             transitionDuration: Duration(milliseconds: 700),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) =>
-                _leftSideTransitionScreen(
-                    context, animation, secondaryAnimation, child),
+                    _leftSideTransitionScreen(
+                        context, animation, secondaryAnimation, child),
             settings: routeSettings,
           );
         }
@@ -72,12 +74,51 @@ class AppRouter {
         {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-            const AuthScreen(),
+                const AuthScreen(),
             transitionDuration: Duration(milliseconds: 700),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) =>
-                _leftSideTransitionScreen(
-                    context, animation, secondaryAnimation, child),
+                    _leftSideTransitionScreen(
+                        context, animation, secondaryAnimation, child),
+            settings: routeSettings,
+          );
+        }
+      case "/sing_out":
+        {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const AuthScreen(),
+            transitionDuration: Duration(milliseconds: 700),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) =>
+                    _rightSideTransitionScreen(
+                        context, animation, secondaryAnimation, child),
+            settings: routeSettings,
+          );
+        }
+      case "/create_profile_screen":
+        {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                CreateProfileScreen(),
+            transitionDuration: Duration(milliseconds: 700),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) =>
+                    _leftSideTransitionScreen(
+                        context, animation, secondaryAnimation, child),
+            settings: routeSettings,
+          );
+        }
+      case "/create_appointment_screen":
+        {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                CreateAppointmentsScreen(),
+            transitionDuration: Duration(milliseconds: 700),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) =>
+                    _leftSideTransitionScreen(
+                        context, animation, secondaryAnimation, child),
             settings: routeSettings,
           );
         }
@@ -95,8 +136,5 @@ class AppRouter {
     }
   }
 
-  void disposeSecondBloc() {
-
-  }
-
+  void disposeSecondBloc() {}
 }

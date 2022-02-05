@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:dentistry/auth/singup/viewModel/singup_bloc.dart';
 import 'package:dentistry/resources/colors_res.dart';
 import 'package:dentistry/resources/texts_res.dart';
+import 'package:dentistry/user_state/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -28,7 +29,7 @@ class SingupScreen extends StatelessWidget {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: ColorsRes.fromHex(ColorsRes.primaryColor),
+              color: Theme.of(context).iconTheme.color,
             ),
             onPressed: () {
               TabController? controller = DefaultTabController.of(context);
@@ -43,6 +44,8 @@ class SingupScreen extends StatelessWidget {
                 showSimpleNotification(
                     const Text("Вы успешно зарегистрировались!"),
                     background: Colors.lightGreen);
+                    context.read<UserBloc>().add(AddUserInfo(user: state.user));
+                    Navigator.pushNamed(context, "/create_profile_screen");
                 break;
               case SingupStatus.failure:
                 switch (state.errorInfo?.code) {

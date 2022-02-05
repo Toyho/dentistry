@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:dentistry/auth/login/viewModel/login_bloc.dart';
 import 'package:dentistry/resources/colors_res.dart';
 import 'package:dentistry/resources/texts_res.dart';
+import 'package:dentistry/user_state/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -63,7 +64,10 @@ class LoginScreen extends StatelessWidget {
                     background: Colors.redAccent);
                 break;
               case LoginStatus.success:
-                Navigator.pushReplacementNamed(context, "/main_screen");
+                context.read<UserBloc>().add(AuthUser(user: state.user, isAuth: true));
+                Future.delayed(Duration(seconds: 1), () async {
+                  Navigator.pushReplacementNamed(context, "/main_screen");
+                });
             }
           },
           builder: (context, state) {

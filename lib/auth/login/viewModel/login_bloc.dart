@@ -4,14 +4,12 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_event.dart';
 
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -21,7 +19,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Future<void> _onSignInWithEmailAndPassword(
       SignInWithEmailAndPassword event, Emitter<LoginState> emit) async {
-    final SharedPreferences prefs = await _prefs;
     emit(state.copyWith(status: LoginStatus.loading));
     validationAuth(event, emit);
 
@@ -37,7 +34,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           .user;
 
       if (user != null) {
-        prefs.setString("uid_account", user.uid);
         emit(state.copyWith(status: LoginStatus.success, user: user));
       }
     } on FirebaseAuthException catch (error) {

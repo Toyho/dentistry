@@ -1,17 +1,25 @@
 import 'package:customizable_space_bar/customizable_space_bar.dart';
 import 'package:dentistry/resources/colors_res.dart';
+import 'package:dentistry/user_state/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import 'messenger_bloc.dart';
 
 class MessengerScreen extends StatelessWidget {
-  const MessengerScreen({Key? key}) : super(key: key);
+  MessengerScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final userState = context
+        .read<UserBloc>()
+        .state;
+
     return BlocProvider<MessengerBloc>(
-      create: (context) => MessengerBloc()..add(GetUsers())..add(GetMessage()),
+      create: (context) =>
+      MessengerBloc()
+        ..add(GetUsers())..add(GetMessage(userState.userUID)),
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
@@ -19,6 +27,23 @@ class MessengerScreen extends StatelessWidget {
               elevation: 0.0,
               pinned: true,
               automaticallyImplyLeading: false,
+              actions: [
+                BlocBuilder<MessengerBloc, MessengerState>(
+                  builder: (context, state) {
+                    return IconButton(
+                        onPressed: () {
+                          context.read<MessengerBloc>().add(CreateChat(userState.userUID, userState.userAvatar, "${userState.name} ${userState.lastName}"));
+                        },
+                        icon: Icon(
+                          Icons.add,
+                          color: Theme
+                              .of(context)
+                              .iconTheme
+                              .color,
+                        ));
+                  },
+                )
+              ],
               flexibleSpace: CustomizableSpaceBar(
                 builder: (context, scrollingRate) {
                   return Padding(
@@ -42,11 +67,12 @@ class MessengerScreen extends StatelessWidget {
               builder: (context, state) {
                 switch (state.getUsersStatus) {
                   case GetUsersStatus.initial:
-                    return const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator()));
+                    return const SliverToBoxAdapter(
+                        child: Center(child: CircularProgressIndicator()));
                   case GetUsersStatus.success:
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
+                            (BuildContext context, int index) {
                           // if (index.isEven && state.users!.users!.length != 1) {
                           //   return const Padding(
                           //     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -59,7 +85,7 @@ class MessengerScreen extends StatelessWidget {
                                 children: <Widget>[
                                   Material(
                                     child: Image.network(
-                                      "https://i.pinimg.com/736x/ef/83/c3/ef83c388247b4c5784e2ae9cea604fd2.jpg",
+                                      userState.isAdmin! ? state.chats![index]['userAvatar'] : state.chats![index]['userAvatar'],
                                       fit: BoxFit.cover,
                                       width: 50,
                                       height: 50,
@@ -74,15 +100,15 @@ class MessengerScreen extends StatelessWidget {
                                           child: Center(
                                             child: CircularProgressIndicator(
                                               value: loadingProgress
-                                                              .expectedTotalBytes !=
-                                                          null &&
-                                                      loadingProgress
-                                                              .expectedTotalBytes !=
-                                                          null
+                                                  .expectedTotalBytes !=
+                                                  null &&
+                                                  loadingProgress
+                                                      .expectedTotalBytes !=
+                                                      null
                                                   ? loadingProgress
-                                                          .cumulativeBytesLoaded /
-                                                      loadingProgress
-                                                          .expectedTotalBytes!
+                                                  .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
                                                   : null,
                                             ),
                                           ),
@@ -98,7 +124,7 @@ class MessengerScreen extends StatelessWidget {
                                       },
                                     ),
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(25)),
+                                    BorderRadius.all(Radius.circular(25)),
                                     clipBehavior: Clip.hardEdge,
                                   ),
                                   Flexible(
@@ -107,27 +133,38 @@ class MessengerScreen extends StatelessWidget {
                                         children: <Widget>[
                                           Container(
                                             child: Text(
-                                                state.users!.users![index]
-                                                    .name! +
-                                                    " " +
-                                                    state
-                                                        .users!
-                                                        .users![index]
-                                                        .lastName!,
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                    FontWeight.w600)),
+                                                userState.isAdmin! ? state.chats![index]['userName1'] : state.chats![index]['userName2'],
+                                                style: Theme
+                                                    .of(context)
+                                                    .textTheme
+                                                    .headline6),
                                             alignment: Alignment.centerLeft,
                                             margin: EdgeInsets.fromLTRB(
-                                                10, 0, 0, 5),
+                                                10, 0, 0, 10),
                                           ),
                                           Container(
                                             child: Row(
                                               children: [
-                                                Text("Приииииивееееет!!!!!",
-                                                style: TextStyle(fontSize: 14)),
-                                                Text("10:30 am")
+                                                Text(
+                                                    state.chats![index]
+                                                    ['lastMsg'],
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow
+                                                        .ellipsis,
+                                                    style: Theme
+                                                        .of(context)
+                                                        .textTheme
+                                                        .subtitle1),
+                                                Text(
+                                                  DateFormat('kk:mm').format(
+                                                      (state.chats![index]
+                                                      ['lastTime'])
+                                                          .toDate()),
+                                                  style: Theme
+                                                      .of(context)
+                                                      .textTheme
+                                                      .subtitle1,
+                                                )
                                               ],
                                               mainAxisAlignment:
                                               MainAxisAlignment
@@ -145,14 +182,17 @@ class MessengerScreen extends StatelessWidget {
                                 ],
                               ),
                               onPressed: () {
-                                Navigator.pushNamed(context, "/detail_messenger_screen");
+                                print(state.chats![index].id);
+                                Navigator.pushNamed(context,
+                                    "/detail_messenger_screen|${state
+                                        .chats![index].id}");
                               },
                             ),
-                            margin: EdgeInsets.only(
-                                bottom: 10, left: 4, right: 4),
+                            margin:
+                            EdgeInsets.only(bottom: 10, left: 4, right: 4),
                           );
                         },
-                        childCount: state.users!.users!.length,
+                        childCount: state.chats!.length,
                       ),
                     );
                   case GetUsersStatus.failure:
