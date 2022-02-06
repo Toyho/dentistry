@@ -5,12 +5,34 @@ abstract class CreateAppointmentsEvent extends Equatable {
 }
 
 class CheckDate extends CreateAppointmentsEvent {
-  CheckDate({this.date});
+  CheckDate({
+    this.date,
+    this.FIO,
+    this.service,
+  });
 
   String? date;
+  String? FIO;
+  String? service;
 
   @override
-  List<Object?> get props => [date];
+  List<Object?> get props => [date, FIO, service];
+}
+
+class GetServices extends CreateAppointmentsEvent {
+  const GetServices();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class GetDoctors extends CreateAppointmentsEvent {
+  GetDoctors(this.service);
+
+  String? service;
+
+  @override
+  List<Object?> get props => [service];
 }
 
 class CreateAppointment extends CreateAppointmentsEvent {
@@ -21,6 +43,8 @@ class CreateAppointment extends CreateAppointmentsEvent {
     this.patronymic,
     this.date,
     this.passport,
+    this.service,
+    this.fioDoctor,
     this.time,
   });
 
@@ -30,6 +54,8 @@ class CreateAppointment extends CreateAppointmentsEvent {
   String? patronymic;
   String? date;
   String? passport;
+  String? service;
+  String? fioDoctor;
   TimeOfDay? time;
 
   @override
@@ -40,6 +66,8 @@ class CreateAppointment extends CreateAppointmentsEvent {
         patronymic,
         date,
         passport,
+        service,
+        fioDoctor,
         time,
       ];
 }

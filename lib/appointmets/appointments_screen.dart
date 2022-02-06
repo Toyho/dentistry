@@ -1,9 +1,7 @@
 import 'package:customizable_space_bar/customizable_space_bar.dart';
-import 'package:dentistry/resources/colors_res.dart';
+import 'package:dentistry/user_state/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:time_picker_widget/time_picker_widget.dart';
-
 import 'appointments_bloc.dart';
 
 class AppointmentsScreen extends StatelessWidget {
@@ -11,10 +9,11 @@ class AppointmentsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<int> _availableMinutes = [1, 4, 6, 8, 12];
+    final userState = context.read<UserBloc>().state;
 
     return BlocProvider<AppointmentsBloc>(
-      create: (context) => AppointmentsBloc(),
+      create: (context) =>
+          AppointmentsBloc()..add(GetAppointments(userState.userUID!)),
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
@@ -27,19 +26,6 @@ class AppointmentsScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushNamed(
                           context, "/create_appointment_screen");
-                      // showCustomTimePicker(
-                      //     context: context,
-                      //     // It is a must if you provide selectableTimePredicate
-                      //     onFailValidation: (context) => print('Unavailable selection'),
-                      //     initialTime: TimeOfDay(hour: 1, minute: 0),
-                      //     builder: (context, child) {
-                      //       return MediaQuery(
-                      //         data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-                      //         child: child!,
-                      //       );
-                      //     },
-                      //     selectableTimePredicate: (time) => _availableMinutes.contains(time!.hour)).then((time) =>
-                      //     print(time?.format(context)));
                     },
                     icon: Icon(
                       Icons.add_to_photos_outlined,
@@ -65,14 +51,41 @@ class AppointmentsScreen extends StatelessWidget {
               ),
               expandedHeight: 130,
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return ListTile(
-                    title: Text("LIST ITEM"),
-                  );
-                },
-              ),
+            BlocBuilder<AppointmentsBloc, AppointmentsState>(
+              builder: (context, state) {
+                switch (state.getAppointmentsStatus) {
+                  case GetAppointmentsStatus.initial:
+                    return const SliverToBoxAdapter(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  case GetAppointmentsStatus.fail:
+                    return const SliverToBoxAdapter(
+                      child: Center(
+                        child: Text("Произошла ошибка"),
+                      ),
+                    );
+                  case GetAppointmentsStatus.success:
+                    return SliverList(
+                        delegate:
+                            SliverChildBuilderDelegate((context, index) {
+                              return Text(state.listAppointments![index]['fio']);
+                            },
+                            childCount: state.listAppointments!.length));
+                  case GetAppointmentsStatus.empty:
+                    return const SliverToBoxAdapter(
+                      child: Center(
+                        child: Text("Нет записей"),
+                      ),
+                    );
+                }
+                return const SliverToBoxAdapter(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              },
             )
           ],
         ),
