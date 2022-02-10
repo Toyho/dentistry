@@ -9,3 +9,10 @@ class CurrentAppTheme extends SettingsEvent {
   List<Object?> get props => [];
 
 }
+
+class ChangeLocalization extends SettingsEvent {
+
+  @override
+  List<Object?> get props => [];
+
+}

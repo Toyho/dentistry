@@ -1,14 +1,15 @@
 import 'package:customizable_space_bar/customizable_space_bar.dart';
 import 'package:dentistry/google_map/google_map_screen.dart';
 import 'package:dentistry/resources/colors_res.dart';
-import 'package:dentistry/theme/app_themes.dart';
-import 'package:dentistry/theme/settings_bloc.dart';
+import 'package:dentistry/settings/settings_bloc.dart';
+import 'package:dentistry/settings/theme/app_themes.dart';
 import 'package:dentistry/user_state/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'home_bloc.dart';
 
@@ -20,6 +21,7 @@ class HomeScreen extends StatelessWidget {
     final _advancedDrawerController = AdvancedDrawerController();
 
     final userState = context.read<UserBloc>().state;
+    var localText = AppLocalizations.of(context)!;
 
     return BlocProvider<HomeBloc>(
       create: (_) => HomeBloc()..add(GetPosts()),
@@ -30,6 +32,7 @@ class HomeScreen extends StatelessWidget {
             animationCurve: Curves.easeInOut,
             animationDuration: const Duration(milliseconds: 300),
             animateChildDecoration: true,
+            backdropColor: Theme.of(context).primaryColor,
             rtlOpening: false,
             disabledGestures: false,
             childDecoration: const BoxDecoration(
@@ -39,37 +42,72 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 54),
               child: Column(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      context.read<HomeBloc>().add(ChangeAvatar());
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      return CircleAvatar(
+                        radius: 65,
+                        backgroundImage: NetworkImage(state.userAvatar!),
+                      );
                     },
-                    child: CircleAvatar(
-                      radius: 65,
-                      backgroundImage: NetworkImage(
-                          context.read<UserBloc>().state.userAvatar!),
-                    ),
                   ),
                   const SizedBox(
                     height: 12,
                   ),
-                  Text(
-                    userState.name! + " " + userState.lastName!,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: ColorsRes.fromHex(ColorsRes.whiteColor)),
+                  BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      return Container(
+                        padding: EdgeInsets.only(bottom: 12),
+                        child: Text(
+                          state.name! + " " + state.lastName!,
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: ColorsRes.fromHex(ColorsRes.whiteColor)),
+                        ),
+                      );
+                    },
                   ),
-                  TextButton(
-                      onPressed: () {
-                        context.read<SettingsBloc>().add(CurrentAppTheme());
-                      },
-                      child: Text("theme")),
-                  TextButton(
-                      onPressed: () {
-                        context.read<UserBloc>().add(DeleteUserInfo());
-                        Navigator.pushReplacementNamed(context, "/sing_out");
-                      },
-                      child: Text("sing out")),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, "/settings_screen");
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 14),
+                      child: Row(children: [
+                        Icon(
+                          Icons.settings,
+                          color: ColorsRes.fromHex(ColorsRes.whiteColor),
+                        ),
+                        SizedBox(width: 10.0),
+                        Text(localText.settings,
+                            style: TextStyle(fontSize: 20)),
+                        Spacer(),
+                      ]),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      context.read<UserBloc>().add(DeleteUserInfo());
+                      Navigator.pushReplacementNamed(context, "/sing_out");
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 14),
+                      child: Row(children: [
+                        Icon(
+                          Icons.logout,
+                          color: ColorsRes.fromHex(ColorsRes.whiteColor),
+                        ),
+                        SizedBox(width: 10.0),
+                        Text(
+                          localText.singOut,
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Spacer(),
+                      ]),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -119,7 +157,7 @@ class HomeScreen extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.bottomLeft,
                             child: Text(
-                              "Home",
+                              localText.home,
                               style: TextStyle(
                                   fontSize: 42 - 18 * scrollingRate,
                                   fontWeight: FontWeight.bold),
@@ -168,23 +206,31 @@ class HomeScreen extends StatelessWidget {
                                   Padding(
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 8),
-                                    child: Image.network(
-                                        state.posts?.posts![index].image
-                                            as String,
-                                        loadingBuilder:
-                                            (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return Shimmer.fromColors(
-                                        baseColor: Colors.grey[300]!,
-                                        highlightColor: Colors.grey[100]!,
-                                        child: Container(
-                                          height: 200,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          color: Colors.white,
-                                        ),
-                                      );
-                                    }),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(context,
+                                            "/photo_view_screen|${state.posts?.posts![index].image as String}");
+                                      },
+                                      child: Image.network(
+                                          state.posts?.posts![index].image
+                                              as String,
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return Shimmer.fromColors(
+                                          baseColor: Colors.grey[300]!,
+                                          highlightColor: Colors.grey[100]!,
+                                          child: Container(
+                                            height: 200,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            color: Colors.white,
+                                          ),
+                                        );
+                                      }),
+                                    ),
                                   ),
                                 ],
                               ),

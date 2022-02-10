@@ -5,6 +5,7 @@ import 'package:dentistry/home/home_screen.dart';
 import 'package:dentistry/messenger/messenger_screen.dart';
 import 'package:dentistry/resources/colors_res.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -19,6 +20,9 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    var localText = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
@@ -45,25 +49,25 @@ class _MainScreenState extends State<MainScreen> {
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
             icon: Icon(Icons.apps),
-            title: Text('Home'),
+            title: Text(AppLocalizations.of(context)!.home),
             activeColor: ColorsRes.fromHex(ColorsRes.primaryColor),
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.calendar_today_rounded),
-            title: Text('Записи'),
+            title: Text(localText.appointments),
             activeColor: ColorsRes.fromHex(ColorsRes.primaryColor),
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
             icon: const Icon(Icons.message),
-            title: const Text('Сообщения'),
+            title: Text(localText.messages),
             activeColor: ColorsRes.fromHex(ColorsRes.primaryColor),
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
             icon: Icon(Icons.medical_services),
-            title: Text('Доктора'),
+            title: Text(localText.doctors),
             activeColor: ColorsRes.fromHex(ColorsRes.primaryColor),
             textAlign: TextAlign.center,
           ),

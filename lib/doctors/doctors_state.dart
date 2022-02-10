@@ -1,28 +1,31 @@
 part of 'doctors_bloc.dart';
 
-enum GetDoctorsStatus {initial, success, failure, empty}
+enum GetDentistsStatus { initial, success, failure, empty }
+enum GetOrthopedistsStatus { initial, success, failure, empty }
 
 class DoctorsState extends Equatable {
-  const DoctorsState({
-    this.status = GetDoctorsStatus.initial,
-    this.doctors
-  });
+  const DoctorsState({this.getDentistsStatus = GetDentistsStatus.initial, this.getOrthopedistsStatus = GetOrthopedistsStatus.initial, this.dentists, this.orthopedists});
 
-  final GetDoctorsStatus status;
-  final DoctorsList? doctors;
-
+  final GetDentistsStatus getDentistsStatus;
+  final GetOrthopedistsStatus getOrthopedistsStatus;
+  final QuerySnapshot<Object?>? dentists;
+  final QuerySnapshot<Object?>? orthopedists;
 
   DoctorsState copyWith({
-    GetDoctorsStatus? status,
+    GetDentistsStatus? getDentistsStatus,
+    GetOrthopedistsStatus? getOrthopedistsStatus,
     DoctorsList? doctos,
+    QuerySnapshot<Object?>? dentists,
+    QuerySnapshot<Object?>? orthopedists,
   }) {
     return DoctorsState(
-      status: status ?? this.status,
-      doctors: doctos ?? this.doctors,
+      getDentistsStatus: getDentistsStatus ?? this.getDentistsStatus,
+      getOrthopedistsStatus: getOrthopedistsStatus ?? this.getOrthopedistsStatus,
+      dentists: dentists ?? this.dentists,
+      orthopedists: orthopedists ?? this.orthopedists,
     );
   }
 
   @override
-  List<Object?> get props => [status, doctors];
+  List<Object?> get props => [getDentistsStatus, dentists, orthopedists, getOrthopedistsStatus];
 }
-

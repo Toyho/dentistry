@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 part 'create_appointments_event.dart';
@@ -16,6 +14,28 @@ class CreateAppointmentsBloc extends Bloc<CreateAppointmentsEvent, CreateAppoint
     on<CreateAppointment>(_createAppointment);
     on<GetServices>(_getService);
     on<GetDoctors>(_getDoctors);
+    on<ValidationDate>(_validationDate);
+    on<ValidationTime>(_validationTime);
+  }
+
+  Future<void> _validationTime(ValidationTime event, Emitter<CreateAppointmentsState> emit) async {
+    var hourAndMinute = event.newTime!.split(':');
+
+    if(hourAndMinute[0].length == 1 || hourAndMinute[0].length == 2 && hourAndMinute[1].length == 2) {
+      emit(state.copyWith(isChoiceOfTimeEnable: true));
+    } else {
+      emit(state.copyWith(isChoiceOfTimeEnable: false));
+    }
+
+  }
+
+  Future<void> _validationDate(ValidationDate event, Emitter<CreateAppointmentsState> emit) async {
+    if(event.newDate!.length == 10) {
+      emit(state.copyWith(isChoiceOfDateEnable: true));
+    } else {
+      emit(state.copyWith(isChoiceOfDateEnable: false));
+    }
+
   }
 
   Future<void> _getDoctors(GetDoctors event, Emitter<CreateAppointmentsState> emit) async {
@@ -49,20 +69,29 @@ class CreateAppointmentsBloc extends Bloc<CreateAppointmentsEvent, CreateAppoint
     index.remove(event.time!.hour);
     print(index);
 
-    FirebaseFirestore.instance.collection('appointments').add({
-      'uidCreater' : event.uidCreater,
-      'fio' : '${event.lastName} ${event.name} ${event.patronymic}',
-      'passport' : event.passport,
-      'date' : event.date,
-      'time' : '${event.time!.hour}:${event.time!.minute}',
-      'fioDoctor' : event.fioDoctor,
-    });
+    try{
+      FirebaseFirestore.instance.collection('appointments').add({
+        'uidCreater' : event.uidCreater,
+        'fio' : '${event.lastName} ${event.name} ${event.patronymic}',
+        'passport' : event.passport,
+        'date' : event.date,
+        'time' : '${event.time!.hour}:${event.time!.minute}',
+        'fioDoctor' : event.fioDoctor,
+        'uidDoctor' : state.idDoctor,
+        'service' : event.service,
+      });
 
-    FirebaseFirestore.instance.collection('doctors').doc(event.service).collection('doctors').doc(state.idDoctor).collection('freeTime').doc(event.date).set(
-      {
-        'freeTime' : index
-      }
-    );
+      FirebaseFirestore.instance.collection('doctors').doc(event.service).collection('doctors').doc(state.idDoctor).collection('freeTime').doc(event.date).set(
+          {
+            'freeTime' : index
+          }
+      );
+
+      emit(state.copyWith(createAppointmentStatus: CreateAppointmentStatus.success));
+
+    } catch(_){
+      emit(state.copyWith(createAppointmentStatus: CreateAppointmentStatus.fail));
+    }
 
   }
 
@@ -81,7 +110,7 @@ class CreateAppointmentsBloc extends Bloc<CreateAppointmentsEvent, CreateAppoint
 
       if (!doc.exists) {
         List<int> listTime = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
-        emit(state.copyWith(listFreeTime: listTime));
+        emit(state.copyWith(listFreeTime: listTime, idDoctor: documents));
       } else {
         print(doc['freeTime']);
         emit(state.copyWith(listFreeTime: doc['freeTime'].cast<int>(), idDoctor: documents));

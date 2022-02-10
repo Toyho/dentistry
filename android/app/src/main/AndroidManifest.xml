@@ -1,11 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.dentistry">
    <application
+        tools:replace="android:label"
         android:label="dentistry"
         android:icon="@mipmap/ic_launcher">
 
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyAhwSD2nkIyDLsgOHxKOtt8p5Rf4V1y_e4"/>
+
+       <meta-data
+           android:name="flutterEmbedding"
+           android:value="2" />
 
         <activity
             android:name=".MainActivity"
@@ -14,9 +20,9 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            <!-- Specifies an Android theme to apply to this Activity as soon as
-                 the Android process has started. This theme is visible to the user
-                 while the Flutter UI initializes. After that, this theme continues
+            <!-- Specifies an Android settings to apply to this Activity as soon as
+                 the Android process has started. This settings is visible to the user
+                 while the Flutter UI initializes. After that, this settings continues
                  to determine the Window background behind the Flutter UI. -->
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"

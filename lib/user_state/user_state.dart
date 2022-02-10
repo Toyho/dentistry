@@ -8,8 +8,10 @@ class UserState extends Equatable {
     this.userAvatar = "",
     this.patronymic = "",
     this.passport = "",
+    this.email = "",
     this.isAdmin = false,
-    this.isAuth = false
+    this.isAuth = false,
+    this.dateOfBirth = ""
   });
 
   final String? userUID;
@@ -18,8 +20,10 @@ class UserState extends Equatable {
   final String? userAvatar;
   final String? patronymic;
   final String? passport;
+  final String? email;
   final bool? isAdmin;
   final bool? isAuth;
+  final String? dateOfBirth;
 
 
   UserState copyWith({
@@ -29,8 +33,10 @@ class UserState extends Equatable {
     String? userAvatar,
     String? patronymic,
     String? passport,
+    String? email,
     bool? isAuth,
     bool? isAdmin,
+    String? dateOfBirth,
   }) {
     return UserState(
       userUID: userUID ?? this.userUID,
@@ -39,12 +45,14 @@ class UserState extends Equatable {
       userAvatar: userAvatar ?? this.userAvatar,
       patronymic: patronymic ?? this.patronymic,
       passport: passport ?? this.passport,
+      email: email ?? this.email,
       isAuth: isAuth ?? this.isAuth,
       isAdmin: isAdmin ?? this.isAdmin,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
     );
   }
 
   @override
-  List<Object?> get props => [userUID, name, lastName, userAvatar, isAuth, isAdmin];
+  List<Object?> get props => [userUID, name, lastName, userAvatar, patronymic, passport, email, isAuth, isAdmin, dateOfBirth];
 }
 

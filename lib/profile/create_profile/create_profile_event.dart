@@ -17,8 +17,10 @@ class SaveInfoEvent extends CreateProfileEvent {
     this.lastName,
     this.patronymic,
     this.passport,
-    this.user,
+    this.userUID,
     this.dateOfBirth,
+    this.userEmail,
+    this.currentAvatar,
   });
 
   final String? name;
@@ -26,8 +28,11 @@ class SaveInfoEvent extends CreateProfileEvent {
   final String? patronymic;
   final String? passport;
   final String? dateOfBirth;
-  final String? user;
+  final String? userUID;
+  final String? userEmail;
+  final String? currentAvatar;
 
   @override
-  List<Object?> get props => [name, lastName, patronymic, passport, user, dateOfBirth];
+  List<Object?> get props =>
+      [name, lastName, patronymic, passport, userUID, dateOfBirth, userEmail, currentAvatar];
 }

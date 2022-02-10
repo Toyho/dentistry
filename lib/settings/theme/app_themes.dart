@@ -6,14 +6,8 @@ ThemeData lightTheme = ThemeData(
     visualDensity: const VisualDensity(vertical: 0.5, horizontal: 0.5),
     textTheme: TextTheme(
       headline6: TextStyle(
-        color: Colors.black,
-        fontSize: 14,
-        fontWeight: FontWeight.w500
-      ),
-      subtitle1: TextStyle(
-          color: Colors.grey,
-          fontSize: 12
-      ),
+          color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
+      subtitle2: TextStyle(color: Colors.grey, fontSize: 12),
     ),
     primarySwatch: const MaterialColor(
       0xFF6f94fe,
@@ -30,24 +24,21 @@ ThemeData lightTheme = ThemeData(
         900: Color(0xff936F3E)
       },
     ),
-    iconTheme: IconThemeData(
-      color: ColorsRes.fromHex(ColorsRes.primaryColor)
-    ),
+    iconTheme: IconThemeData(color: ColorsRes.fromHex(ColorsRes.primaryColor)),
     indicatorColor: ColorsRes.fromHex(ColorsRes.primaryColor),
     progressIndicatorTheme: ProgressIndicatorThemeData(
         color: ColorsRes.fromHex(ColorsRes.primaryColor)),
     tabBarTheme: TabBarTheme(
         labelColor: ColorsRes.fromHex(ColorsRes.eerieBlackColor),
-        labelStyle:
-            TextStyle(color: ColorsRes.fromHex(ColorsRes.whiteColor))),
+        labelStyle: TextStyle(color: ColorsRes.fromHex(ColorsRes.whiteColor))),
     primaryColor: ColorsRes.fromHex(ColorsRes.primaryColor),
     primaryColorBrightness: Brightness.light,
     primaryColorLight: Color(0x1a6f94fe),
     primaryColorDark: Color(0xff936F3E),
-    canvasColor: ColorsRes.fromHex(ColorsRes.primaryColor),
+    canvasColor: Colors.white,
     appBarTheme: AppBarTheme(
-      color: Colors.white,
-    ),
+        color: Colors.white,
+        titleTextStyle: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500)),
     accentColor: Color(0xff457BE0),
     accentColorBrightness: Brightness.light,
     scaffoldBackgroundColor: ColorsRes.fromHex(ColorsRes.whiteColor),
@@ -61,14 +52,8 @@ ThemeData darkTheme = ThemeData(
     visualDensity: VisualDensity(vertical: 0.5, horizontal: 0.5),
     textTheme: TextTheme(
       headline6: TextStyle(
-          color: Colors.white,
-          fontSize: 14,
-          fontWeight: FontWeight.w500
-      ),
-      subtitle1: TextStyle(
-          color: Colors.grey,
-          fontSize: 12
-      ),
+          color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+      subtitle2: TextStyle(color: Colors.grey, fontSize: 12),
     ),
     primarySwatch: const MaterialColor(
       0xFF6f94fe,
@@ -85,9 +70,7 @@ ThemeData darkTheme = ThemeData(
         900: Color(0xff2F1E06)
       },
     ),
-    iconTheme: IconThemeData(
-        color: ColorsRes.fromHex(ColorsRes.whiteColor)
-    ),
+    iconTheme: IconThemeData(color: ColorsRes.fromHex(ColorsRes.whiteColor)),
     indicatorColor: ColorsRes.fromHex(ColorsRes.primaryColor),
     tabBarTheme: TabBarTheme(
         labelColor: ColorsRes.fromHex(ColorsRes.whiteColor),
@@ -95,14 +78,14 @@ ThemeData darkTheme = ThemeData(
             TextStyle(color: ColorsRes.fromHex(ColorsRes.eerieBlackColor))),
     progressIndicatorTheme: ProgressIndicatorThemeData(
         color: ColorsRes.fromHex(ColorsRes.whiteColor)),
-    primaryColor: Color(0xff5D4524),
+    primaryColor: ColorsRes.fromHex(ColorsRes.eerieBlackColor),
     primaryColorBrightness: Brightness.dark,
     primaryColorLight: Color(0x1a311F06),
     primaryColorDark: Color(0xff936F3E),
-    canvasColor: ColorsRes.fromHex(ColorsRes.codBlackColor),
+    canvasColor: ColorsRes.fromHex(ColorsRes.eerieBlackColor),
     appBarTheme: AppBarTheme(
-      color: ColorsRes.fromHex(ColorsRes.eerieBlackColor),
-    ),
+        color: ColorsRes.fromHex(ColorsRes.eerieBlackColor),
+        titleTextStyle: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500)),
     accentColor: Color(0x383535FF),
     accentColorBrightness: Brightness.dark,
     scaffoldBackgroundColor: ColorsRes.fromHex(ColorsRes.codBlackColor),

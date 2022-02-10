@@ -11,12 +11,13 @@ class GetUsers extends MessengerEvent {
 }
 
 class GetMessage extends MessengerEvent {
-  const GetMessage(this.userUID);
+  const GetMessage({this.userUID, this.isAdmin});
 
   final String? userUID;
+  final bool? isAdmin;
 
   @override
-  List<Object?> get props => [userUID];
+  List<Object?> get props => [userUID, isAdmin];
 
 }
 

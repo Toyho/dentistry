@@ -12,7 +12,6 @@ part 'user_event.dart';
 part 'user_state.dart';
 
 class UserBloc extends HydratedBloc<UserEvent, UserState> {
-
   Users? user;
 
   UserBloc() : super(const UserState()) {
@@ -25,39 +24,82 @@ class UserBloc extends HydratedBloc<UserEvent, UserState> {
   Future<void> _authUser(AuthUser event, Emitter<UserState> emit) async {
     await FirebaseDatabase.instance
         .ref()
-        .child("users").child(event.user!.uid)
-        .once().then((_){
+        .child("users")
+        .child(event.user!.uid)
+        .once()
+        .then((_) {
       DatabaseEvent snapshot = _;
       user = Users.fromJson(snapshot.snapshot.value);
-    }).whenComplete(() => emit(state.copyWith(userUID: user!.uid, userAvatar: user!.avatar, name: user!.name, lastName: user!.lastName, patronymic: user!.patronymic, passport: user!.passport, isAuth: event.isAuth, isAdmin: user!.admin)));
-
+    }).whenComplete(() => emit(state.copyWith(
+            userUID: user!.uid,
+            userAvatar: user!.avatar,
+            name: user!.name,
+            lastName: user!.lastName,
+            patronymic: user!.patronymic,
+            email: user!.email,
+            passport: user!.passport,
+            isAuth: event.isAuth,
+            isAdmin: user!.admin,
+            dateOfBirth: user!.dateOfBirth)));
   }
 
   Future<void> _addUserInfo(AddUserInfo event, Emitter<UserState> emit) async {
-
     await FirebaseDatabase.instance
         .ref()
-        .child("users").child(event.user!.uid)
-        .once().then((_){
+        .child("users")
+        .child(event.user!.uid)
+        .once()
+        .then((_) {
       DatabaseEvent snapshot = _;
       user = Users.fromJson(snapshot.snapshot.value);
-    }).whenComplete(() => emit(state.copyWith(userUID: user!.uid, userAvatar: user!.avatar, name: user!.name, lastName: user!.lastName, patronymic: user!.patronymic, passport: user!.passport, isAdmin: user!.admin)));
+    }).whenComplete(() => emit(state.copyWith(
+            userUID: user!.uid,
+            userAvatar: user!.avatar,
+            name: user!.name,
+            lastName: user!.lastName,
+            patronymic: user!.patronymic,
+            email: user!.email,
+            passport: user!.passport,
+            isAdmin: user!.admin,
+            dateOfBirth: user!.dateOfBirth)));
   }
 
-  Future<void> _overwritingUserInfo(OverwritingUserInfo event, Emitter<UserState> emit) async {
-
+  Future<void> _overwritingUserInfo(
+      OverwritingUserInfo event, Emitter<UserState> emit) async {
     await FirebaseDatabase.instance
         .ref()
-        .child("users").child(state.userUID!)
-        .once().then((_){
+        .child("users")
+        .child(state.userUID!)
+        .once()
+        .then((_) {
       DatabaseEvent snapshot = _;
       user = Users.fromJson(snapshot.snapshot.value);
-    }).whenComplete(() => emit(state.copyWith(userUID: user!.uid, userAvatar:  user!.avatar , name: user!.name, patronymic: user!.patronymic, passport: user!.passport, lastName: user!.lastName, isAdmin: user!.admin)));
+    }).whenComplete(() => emit(state.copyWith(
+            userUID: user!.uid,
+            userAvatar: user!.avatar,
+            name: user!.name,
+            patronymic: user!.patronymic,
+            passport: user!.passport,
+            email: user!.email,
+            lastName: user!.lastName,
+            isAdmin: user!.admin,
+            dateOfBirth: user!.dateOfBirth)));
   }
 
-  Future<void> _deleteUserInfo(DeleteUserInfo event, Emitter<UserState> emit) async {
+  Future<void> _deleteUserInfo(
+      DeleteUserInfo event, Emitter<UserState> emit) async {
     await FirebaseAuth.instance.signOut();
-    emit(state.copyWith(name: "", lastName: "", userUID: "", userAvatar: "", patronymic: "", passport: "", isAuth: false, isAdmin: false));
+    emit(state.copyWith(
+        name: "",
+        lastName: "",
+        userUID: "",
+        userAvatar: "",
+        patronymic: "",
+        passport: "",
+        email: "",
+        isAuth: false,
+        isAdmin: false,
+        dateOfBirth: ""));
   }
 
   @override
@@ -69,8 +111,10 @@ class UserBloc extends HydratedBloc<UserEvent, UserState> {
         userAvatar: json['userAvatar'],
         patronymic: json['patronymic'],
         passport: json['passport'],
+        email: json['email'],
         isAuth: json['isAuth'],
-        isAdmin: json['isAdmin']);
+        isAdmin: json['isAdmin'],
+        dateOfBirth: json['dateOfBirth']);
   }
 
   @override
@@ -82,8 +126,10 @@ class UserBloc extends HydratedBloc<UserEvent, UserState> {
       'userAvatar': state.userAvatar!,
       'patronymic': state.patronymic!,
       'passport': state.passport!,
+      'email': state.email!,
       'isAuth': state.isAuth!,
       'isAdmin': state.isAdmin!,
+      'dateOfBirth': state.dateOfBirth!,
     };
   }
 }

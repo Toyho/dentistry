@@ -35,6 +35,23 @@ class GetDoctors extends CreateAppointmentsEvent {
   List<Object?> get props => [service];
 }
 
+class ValidationDate extends CreateAppointmentsEvent {
+  ValidationDate(this.newDate);
+
+  String? newDate;
+
+  @override
+  List<Object?> get props => [newDate];
+}
+class ValidationTime extends CreateAppointmentsEvent {
+  ValidationTime(this.newTime);
+
+  String? newTime;
+
+  @override
+  List<Object?> get props => [newTime];
+}
+
 class CreateAppointment extends CreateAppointmentsEvent {
   CreateAppointment({
     this.uidCreater,

@@ -1,9 +1,9 @@
 import 'package:customizable_space_bar/customizable_space_bar.dart';
-import 'package:dentistry/resources/colors_res.dart';
 import 'package:dentistry/user_state/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'messenger_bloc.dart';
 
@@ -12,14 +12,14 @@ class MessengerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userState = context
-        .read<UserBloc>()
-        .state;
+    final userState = context.read<UserBloc>().state;
+    var localText = AppLocalizations.of(context)!;
 
     return BlocProvider<MessengerBloc>(
-      create: (context) =>
-      MessengerBloc()
-        ..add(GetUsers())..add(GetMessage(userState.userUID)),
+      create: (context) => MessengerBloc()
+        ..add(GetUsers())
+        ..add(
+            GetMessage(userUID: userState.userUID, isAdmin: userState.isAdmin)),
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
@@ -32,14 +32,14 @@ class MessengerScreen extends StatelessWidget {
                   builder: (context, state) {
                     return IconButton(
                         onPressed: () {
-                          context.read<MessengerBloc>().add(CreateChat(userState.userUID, userState.userAvatar, "${userState.name} ${userState.lastName}"));
+                          context.read<MessengerBloc>().add(CreateChat(
+                              userState.userUID,
+                              userState.userAvatar,
+                              "${userState.name} ${userState.lastName}"));
                         },
                         icon: Icon(
                           Icons.add,
-                          color: Theme
-                              .of(context)
-                              .iconTheme
-                              .color,
+                          color: Theme.of(context).iconTheme.color,
                         ));
                   },
                 )
@@ -52,7 +52,7 @@ class MessengerScreen extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        "Messages",
+                        localText.messages,
                         style: TextStyle(
                             fontSize: 42 - 18 * scrollingRate,
                             fontWeight: FontWeight.bold),
@@ -69,10 +69,13 @@ class MessengerScreen extends StatelessWidget {
                   case GetUsersStatus.initial:
                     return const SliverToBoxAdapter(
                         child: Center(child: CircularProgressIndicator()));
+                  case GetUsersStatus.empty:
+                    return SliverToBoxAdapter(
+                        child: Center(child: Text(localText.noChats)));
                   case GetUsersStatus.success:
                     return SliverList(
                       delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
+                        (BuildContext context, int index) {
                           // if (index.isEven && state.users!.users!.length != 1) {
                           //   return const Padding(
                           //     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -85,7 +88,9 @@ class MessengerScreen extends StatelessWidget {
                                 children: <Widget>[
                                   Material(
                                     child: Image.network(
-                                      userState.isAdmin! ? state.chats![index]['userAvatar'] : state.chats![index]['userAvatar'],
+                                      userState.isAdmin!
+                                          ? state.chats![index]['userAvatar']
+                                          : state.chats![index]['userAvatar'],
                                       fit: BoxFit.cover,
                                       width: 50,
                                       height: 50,
@@ -100,15 +105,15 @@ class MessengerScreen extends StatelessWidget {
                                           child: Center(
                                             child: CircularProgressIndicator(
                                               value: loadingProgress
-                                                  .expectedTotalBytes !=
-                                                  null &&
-                                                  loadingProgress
-                                                      .expectedTotalBytes !=
-                                                      null
+                                                              .expectedTotalBytes !=
+                                                          null &&
+                                                      loadingProgress
+                                                              .expectedTotalBytes !=
+                                                          null
                                                   ? loadingProgress
-                                                  .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
                                                   : null,
                                             ),
                                           ),
@@ -124,7 +129,7 @@ class MessengerScreen extends StatelessWidget {
                                       },
                                     ),
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(25)),
+                                        BorderRadius.all(Radius.circular(25)),
                                     clipBehavior: Clip.hardEdge,
                                   ),
                                   Flexible(
@@ -133,9 +138,12 @@ class MessengerScreen extends StatelessWidget {
                                         children: <Widget>[
                                           Container(
                                             child: Text(
-                                                userState.isAdmin! ? state.chats![index]['userName1'] : state.chats![index]['userName2'],
-                                                style: Theme
-                                                    .of(context)
+                                                userState.isAdmin!
+                                                    ? state.chats![index]
+                                                        ['userName1']
+                                                    : state.chats![index]
+                                                        ['userName2'],
+                                                style: Theme.of(context)
                                                     .textTheme
                                                     .headline6),
                                             alignment: Alignment.centerLeft,
@@ -147,28 +155,31 @@ class MessengerScreen extends StatelessWidget {
                                               children: [
                                                 Text(
                                                     state.chats![index]
-                                                    ['lastMsg'],
+                                                        ['lastMsg'],
                                                     maxLines: 1,
-                                                    overflow: TextOverflow
-                                                        .ellipsis,
-                                                    style: Theme
-                                                        .of(context)
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: Theme.of(context)
                                                         .textTheme
-                                                        .subtitle1),
-                                                Text(
-                                                  DateFormat('kk:mm').format(
-                                                      (state.chats![index]
-                                                      ['lastTime'])
-                                                          .toDate()),
-                                                  style: Theme
-                                                      .of(context)
-                                                      .textTheme
-                                                      .subtitle1,
-                                                )
+                                                        .subtitle2),
+                                                state.chats![index]
+                                                            ['lastTime'] !=
+                                                        null
+                                                    ? Text(
+                                                        DateFormat('kk:mm')
+                                                            .format((state.chats![
+                                                                        index][
+                                                                    'lastTime'])
+                                                                .toDate()),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .subtitle2,
+                                                      )
+                                                    : const SizedBox()
                                               ],
                                               mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                             ),
                                             alignment: Alignment.centerLeft,
                                             margin: EdgeInsets.fromLTRB(
@@ -183,13 +194,15 @@ class MessengerScreen extends StatelessWidget {
                               ),
                               onPressed: () {
                                 print(state.chats![index].id);
-                                Navigator.pushNamed(context,
-                                    "/detail_messenger_screen|${state
-                                        .chats![index].id}");
+                                Navigator.pushNamed(
+                                    context,
+                                    "/detail_messenger_screen|${state.chats![index].id}|"
+                                    "${userState.isAdmin! ? state.chats![index]['userName1'] : state.chats![index]['userName2']}|"
+                                    "${userState.isAdmin! ? state.chats![index]['userAvatar'] : state.chats![index]['userAvatar']}|");
                               },
                             ),
                             margin:
-                            EdgeInsets.only(bottom: 10, left: 4, right: 4),
+                                EdgeInsets.only(bottom: 10, left: 4, right: 4),
                           );
                         },
                         childCount: state.chats!.length,

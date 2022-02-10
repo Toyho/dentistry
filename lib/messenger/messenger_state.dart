@@ -1,6 +1,6 @@
 part of 'messenger_bloc.dart';
 
-enum GetUsersStatus { initial, success, failure }
+enum GetUsersStatus { initial, success, failure, empty }
 
 @immutable
 class MessengerState extends Equatable{

@@ -1,13 +1,13 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:dentistry/auth/singup/viewModel/singup_bloc.dart';
 import 'package:dentistry/resources/colors_res.dart';
-import 'package:dentistry/resources/texts_res.dart';
 import 'package:dentistry/user_state/user_bloc.dart';
+import 'package:dentistry/widgets/custome_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SingupScreen extends StatelessWidget {
   SingupScreen({Key? key}) : super(key: key);
@@ -19,6 +19,9 @@ class SingupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var localText = AppLocalizations.of(context)!;
+
     return BlocProvider<SingupBloc>(
       create: (context) => SingupBloc(),
       child: Scaffold(
@@ -102,7 +105,7 @@ class SingupScreen extends StatelessWidget {
                             Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  TextsRes.singUp,
+                                  localText.singUp,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
@@ -111,63 +114,77 @@ class SingupScreen extends StatelessWidget {
                             const SizedBox(
                               height: 16,
                             ),
-                            TextField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                focusColor:
-                                    ColorsRes.fromHex(ColorsRes.primaryColor),
-                                border: const OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12))),
-                                hintText: TextsRes.email,
-                              ),
+                            CustomeTextField(
+                              textController: emailController,
+                              hint: localText.email,
                             ),
+                            // TextField(
+                            //   controller: emailController,
+                            //   decoration: InputDecoration(
+                            //     filled: true,
+                            //     fillColor: Colors.white,
+                            //     focusColor:
+                            //         ColorsRes.fromHex(ColorsRes.primaryColor),
+                            //     border: const OutlineInputBorder(
+                            //         borderRadius:
+                            //             BorderRadius.all(Radius.circular(12))),
+                            //     hintText: localText.email,
+                            //   ),
+                            // ),
                             const SizedBox(
                               height: 16,
                             ),
-                            TextField(
+                            CustomeTextField(
+                              textController: passwordController,
+                              hint: localText.password,
                               obscureText: true,
-                              controller: passwordController,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                focusColor:
-                                    ColorsRes.fromHex(ColorsRes.primaryColor),
-                                border: const OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12))),
-                                hintText: TextsRes.password,
-                              ),
                             ),
+                            // TextField(
+                            //   obscureText: true,
+                            //   controller: passwordController,
+                            //   decoration: InputDecoration(
+                            //     filled: true,
+                            //     fillColor: Colors.white,
+                            //     focusColor:
+                            //         ColorsRes.fromHex(ColorsRes.primaryColor),
+                            //     border: const OutlineInputBorder(
+                            //         borderRadius:
+                            //             BorderRadius.all(Radius.circular(12))),
+                            //     hintText: localText.password,
+                            //   ),
+                            // ),
                             const SizedBox(
                               height: 16,
                             ),
-                            TextField(
+                            CustomeTextField(
+                              textController: confirmPasswordController,
+                              hint: localText.repeatPassword,
                               obscureText: true,
-                              controller: confirmPasswordController,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                focusColor:
-                                    ColorsRes.fromHex(ColorsRes.primaryColor),
-                                border: const OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12))),
-                                hintText: TextsRes.repeatPassword,
-                              ),
                             ),
+                            // TextField(
+                            //   obscureText: true,
+                            //   controller: confirmPasswordController,
+                            //   decoration: InputDecoration(
+                            //     filled: true,
+                            //     fillColor: Colors.white,
+                            //     focusColor:
+                            //         ColorsRes.fromHex(ColorsRes.primaryColor),
+                            //     border: const OutlineInputBorder(
+                            //         borderRadius:
+                            //             BorderRadius.all(Radius.circular(12))),
+                            //     hintText: localText.repeatPassword,
+                            //   ),
+                            // ),
                             const SizedBox(
                               height: 16,
                             ),
                             Text.rich(TextSpan(children: [
                               TextSpan(
-                                  text: TextsRes.privacyAndPolicy1,
+                                  text: localText.privacyAndPolicy1,
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 16)),
                               TextSpan(
-                                  text: TextsRes.privacyAndPolicy2,
+                                  text: localText.privacyAndPolicy2,
                                   style: TextStyle(
                                       color: ColorsRes.fromHex(
                                           ColorsRes.primaryColor),
@@ -206,7 +223,7 @@ class SingupScreen extends StatelessWidget {
                                               strokeWidth: 1.0,
                                             ),
                                           )
-                                        : Text(TextsRes.makeSingUp,
+                                        : Text(localText.makeSingUp,
                                             style:
                                                 const TextStyle(fontSize: 16)),
                                     onPressed: () {

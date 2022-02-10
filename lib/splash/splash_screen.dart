@@ -11,13 +11,12 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Future.delayed(Duration(seconds: 2), (){
+    Future.delayed(const Duration(seconds: 2), (){
       if (context.read<UserBloc>().state.isAuth ?? false) {
         Navigator.pushReplacementNamed(context, "/main_screen");
       } else {
         Navigator.pushReplacementNamed(context, "/auth_screen");
       }
-      // Navigator.pushReplacementNamed(context, "/create_profile_screen");
     });
 
     return Scaffold(

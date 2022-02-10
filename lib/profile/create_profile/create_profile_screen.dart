@@ -1,4 +1,4 @@
-import 'package:dentistry/create_profile/create_profile_bloc.dart';
+import 'package:dentistry/profile/create_profile/create_profile_bloc.dart';
 import 'package:dentistry/resources/colors_res.dart';
 import 'package:dentistry/user_state/user_bloc.dart';
 import 'package:dentistry/widgets/custome_text_field.dart';
@@ -6,10 +6,24 @@ import 'package:easy_mask/easy_mask.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class CreateProfileScreen extends StatelessWidget {
-  bool showPassword = false;
+class CreateProfileScreen extends StatefulWidget {
+  CreateProfileScreen(
+      {this.name, this.lastName, this.patronymic, this.passport, this.dateOfBirth, Key? key})
+      : super(key: key);
 
+  String? name;
+  String? lastName;
+  String? patronymic;
+  String? passport;
+  String? dateOfBirth;
+
+  @override
+  State<CreateProfileScreen> createState() => _CreateProfileScreenState();
+}
+
+class _CreateProfileScreenState extends State<CreateProfileScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController patronymicController = TextEditingController();
@@ -19,7 +33,20 @@ class CreateProfileScreen extends StatelessWidget {
   DateTime selectedDate = DateTime.now();
 
   @override
+  void initState() {
+    nameController.text = widget.name ?? "";
+    lastNameController.text = widget.lastName ?? "";
+    patronymicController.text = widget.patronymic ?? "";
+    passportController.text = widget.passport ?? "";
+    dateController.text = widget.dateOfBirth ?? "";
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var localText = AppLocalizations.of(context)!;
+    var userState = context.read<UserBloc>().state;
+
     return BlocProvider<CreateProfileBloc>(
       create: (context) => CreateProfileBloc(),
       child: Scaffold(
@@ -30,9 +57,16 @@ class CreateProfileScreen extends StatelessWidget {
               Icons.arrow_back,
               color: Theme.of(context).iconTheme.color,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          title: Text("Создание профиля"),
+          title: Text(
+            userState.isAuth!
+                ? localText.editingProfile
+                : localText.createProfile,
+            style: Theme.of(context).appBarTheme.titleTextStyle,
+          ),
         ),
         body: Container(
           padding: EdgeInsets.only(left: 16, top: 25, right: 16),
@@ -45,6 +79,15 @@ class CreateProfileScreen extends StatelessWidget {
                 switch (state.saveProfileState) {
                   case SaveProfile.success:
                     context.read<UserBloc>().add(OverwritingUserInfo());
+                    if (userState.isAuth!) {
+                      Future.delayed(Duration(seconds: 2), () {
+                        Navigator.pop(context);
+                      });
+                    } else {
+                      Future(() {
+                        Navigator.pushReplacementNamed(context, "/auth_screen");
+                      });
+                    }
                     break;
                 }
               },
@@ -80,7 +123,9 @@ class CreateProfileScreen extends StatelessWidget {
                                       fit: BoxFit.cover,
                                       image: state.avatarImage == null
                                           ? NetworkImage(
-                                              "https://firebasestorage.googleapis.com/v0/b/dl-flutter-ui-challenges.appspot.com/o/img%2F1.jpg?alt=media",
+                                              userState.isAuth!
+                                                  ? userState.userAvatar!
+                                                  : "https://firebasestorage.googleapis.com/v0/b/dentistry-4e364.appspot.com/o/defaultAvatar.png?alt=media&token=a26bface-9b6a-4863-acc3-85f1b9adff5b",
                                             )
                                           : FileImage(state.avatarImage!)
                                               as ImageProvider)),
@@ -99,7 +144,7 @@ class CreateProfileScreen extends StatelessWidget {
                                     color: Theme.of(context)
                                         .scaffoldBackgroundColor,
                                   ),
-                                  color: Colors.green,
+                                  color: ColorsRes.fromHex(ColorsRes.primaryColor),
                                 ),
                                 child: Icon(
                                   Icons.edit,
@@ -115,21 +160,21 @@ class CreateProfileScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: CustomeTextField(
-                        hint: "Имя",
+                        hint: localText.name,
                         textController: nameController,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: CustomeTextField(
-                        hint: "Фамилия",
+                        hint: localText.lastName,
                         textController: lastNameController,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 35.0),
                       child: CustomeTextField(
-                        hint: "Отчество",
+                        hint: localText.patronymic,
                         textController: patronymicController,
                       ),
                     ),
@@ -139,56 +184,71 @@ class CreateProfileScreen extends StatelessWidget {
                         inputFormatters: [
                           TextInputMask(mask: '9999 999999'),
                         ],
-                        hint: "Паспортные данные",
+                        hint: localText.passport,
                         textController: passportController,
                       ),
                     ),
                     Padding(
                         padding: const EdgeInsets.only(bottom: 35.0),
                         child: TextField(
+                          onTap: () async {
+                            final DateTime? picked = await showDatePicker(
+                                context: context,
+                                initialDate: selectedDate,
+                                firstDate: DateTime(1940, 1),
+                                lastDate: DateTime.now(),
+                                initialEntryMode: DatePickerEntryMode.input);
+                            dateController.text =
+                                DateFormat('yyyy-MM-dd').format(picked!);
+                          },
+                          readOnly: true,
                           controller: dateController,
                           decoration: InputDecoration(
-                            filled: true,
-                            border: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12))),
-                            hintText: "День рождения",
-                            suffixIcon: IconButton(
-                              onPressed: () async {
-                                final DateTime? picked = await showDatePicker(
-                                    context: context,
-                                    initialDate: selectedDate,
-                                    firstDate: DateTime(2015, 8),
-                                    lastDate: DateTime(2101),
-                                    initialEntryMode:
-                                        DatePickerEntryMode.input);
-                                dateController.text = DateFormat('yyyy-MM-dd').format(picked!);
-                              },
-                              icon: Icon(Icons.calendar_today_outlined),
-                            ),
-                          ),
+                              filled: true,
+                              border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12))),
+                              hintText: localText.dateOfBirth,
+                              suffixIcon:
+                                  const Icon(Icons.calendar_today_outlined)),
                         )),
-                    SizedBox(
-                      height: 56,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: AnimatedContainer(
-                          width: MediaQuery.of(context).size.height,
-                          height: 56,
-                          duration: const Duration(milliseconds: 300),
-                          child: RaisedButton(
-                            padding: const EdgeInsets.all(16.0),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0)),
-                            color: ColorsRes.fromHex(ColorsRes.primaryColor),
-                            textColor: Colors.white,
-                            child: Text("Сохранить",
-                                style: const TextStyle(fontSize: 16)),
-                            onPressed: () {
-                              context.read<CreateProfileBloc>().add(
-                                  SaveInfoEvent(name: nameController.text, lastName: lastNameController.text, patronymic: patronymicController.text, passport: passportController.text, dateOfBirth: dateController.text,
-                                      user: context.read<UserBloc>().state.userUID));
-                            },
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 16),
+                      child: SizedBox(
+                        height: 56,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: AnimatedContainer(
+                            width: MediaQuery.of(context).size.height,
+                            height: 56,
+                            duration: const Duration(milliseconds: 300),
+                            child: RaisedButton(
+                              padding: const EdgeInsets.all(16.0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0)),
+                              color: ColorsRes.fromHex(ColorsRes.primaryColor),
+                              textColor: Colors.white,
+                              child: Text(localText.save,
+                                  style: const TextStyle(fontSize: 16)),
+                              onPressed: () {
+                                context.read<CreateProfileBloc>().add(
+                                    SaveInfoEvent(
+                                        name: nameController.text,
+                                        lastName: lastNameController.text,
+                                        patronymic: patronymicController.text,
+                                        passport: passportController.text,
+                                        dateOfBirth: dateController.text,
+                                        userUID: context
+                                            .read<UserBloc>()
+                                            .state
+                                            .userUID,
+                                        userEmail: context
+                                            .read<UserBloc>()
+                                            .state
+                                            .email,
+                                        currentAvatar: userState.userAvatar));
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -201,22 +261,5 @@ class CreateProfileScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget buildTextField(
-      String labelText, String placeholder, bool isPasswordTextField) {
-    return Padding(
-        padding: const EdgeInsets.only(bottom: 35.0),
-        child: TextField(
-          // controller: emailController,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            focusColor: ColorsRes.fromHex(ColorsRes.primaryColor),
-            border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12))),
-            hintText: labelText,
-          ),
-        ));
   }
 }

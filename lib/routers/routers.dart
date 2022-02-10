@@ -1,8 +1,10 @@
 import 'package:dentistry/appointmets/create_appointments/create_appointments_screen.dart';
 import 'package:dentistry/auth/auth_screen.dart';
-import 'package:dentistry/create_profile/create_profile_screen.dart';
 import 'package:dentistry/main/main_screen.dart';
 import 'package:dentistry/messenger/detailMessenger/detail_messenger_screen.dart';
+import 'package:dentistry/photo_view/photo_view_screen.dart';
+import 'package:dentistry/profile/create_profile/create_profile_screen.dart';
+import 'package:dentistry/settings/view/settings_screen.dart';
 import 'package:dentistry/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,7 +63,11 @@ class AppRouter {
         {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                DetailMessengerScreen(path[1]),
+                DetailMessengerScreen(
+              idChat: path[1],
+              name: path[2],
+              avatar: path[3],
+            ),
             transitionDuration: Duration(milliseconds: 700),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) =>
@@ -109,11 +115,61 @@ class AppRouter {
             settings: routeSettings,
           );
         }
+      case "/change_profile_screen":
+        {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                CreateProfileScreen(
+              name: path[1],
+              lastName: path[2],
+              patronymic: path[3],
+              passport: path[4],
+              dateOfBirth: path[5],
+            ),
+            transitionDuration: Duration(milliseconds: 700),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) =>
+                    _leftSideTransitionScreen(
+                        context, animation, secondaryAnimation, child),
+            settings: routeSettings,
+          );
+        }
       case "/create_appointment_screen":
         {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
-                CreateAppointmentsScreen(),
+                CreateAppointmentsScreen(
+              name: path[1],
+              lastName: path[2],
+              patronymic: path[3],
+              passport: path[4],
+            ),
+            transitionDuration: Duration(milliseconds: 700),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) =>
+                    _leftSideTransitionScreen(
+                        context, animation, secondaryAnimation, child),
+            settings: routeSettings,
+          );
+        }
+      case "/photo_view_screen":
+        {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                PhotoViewScreen(path[1]),
+            transitionDuration: Duration(milliseconds: 700),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) =>
+                    _leftSideTransitionScreen(
+                        context, animation, secondaryAnimation, child),
+            settings: routeSettings,
+          );
+        }
+      case "/settings_screen":
+        {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                SettingsScreen(),
             transitionDuration: Duration(milliseconds: 700),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) =>

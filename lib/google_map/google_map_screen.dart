@@ -67,6 +67,16 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios, color: ColorsRes.fromHex(ColorsRes.primaryColor),),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       bottomSheet: SafeArea(
         child: SolidBottomSheet(
           draggableBody: true,
@@ -99,10 +109,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           ),
         ),
       ),
-      body: Stack(
-        alignment: AlignmentDirectional.topStart,
-        children: [
-          FutureBuilder(
+      body: FutureBuilder(
             future: generateMarkers([_kMapCenter]),
             builder:
             (BuildContext context, AsyncSnapshot<Set<Marker>> snapshot) {
@@ -126,17 +133,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           return child;
             },
           ),
-          Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03, left: 16),
-            child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back_ios, color: ColorsRes.fromHex(ColorsRes.primaryColor),),
-            ),
-          )
-        ],
-      ),
+
     );
   }
 

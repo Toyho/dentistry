@@ -2,7 +2,8 @@ import 'dart:ui';
 
 import 'package:dentistry/auth/login/viewModel/login_bloc.dart';
 import 'package:dentistry/resources/colors_res.dart';
-import 'package:dentistry/resources/texts_res.dart';
+import 'package:dentistry/widgets/custome_text_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dentistry/user_state/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,12 +18,14 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var localText = AppLocalizations.of(context)!;
+
     return BlocProvider<LoginBloc>(
       create: (_) => LoginBloc(),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
           elevation: 0.0,
         ),
         body: BlocConsumer<LoginBloc, LoginState>(
@@ -89,7 +92,7 @@ class LoginScreen extends StatelessWidget {
                             Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  TextsRes.login,
+                                  localText.login,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
@@ -98,35 +101,17 @@ class LoginScreen extends StatelessWidget {
                             const SizedBox(
                               height: 16,
                             ),
-                            TextField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                focusColor:
-                                    ColorsRes.fromHex(ColorsRes.primaryColor),
-                                border: const OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12))),
-                                hintText: TextsRes.email,
-                              ),
+                            CustomeTextField(
+                              textController: emailController,
+                              hint: localText.email,
                             ),
                             const SizedBox(
                               height: 16,
                             ),
-                            TextField(
+                            CustomeTextField(
                               obscureText: true,
-                              controller: passwordController,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                focusColor:
-                                    ColorsRes.fromHex(ColorsRes.primaryColor),
-                                border: const OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12))),
-                                hintText: TextsRes.password,
-                              ),
+                              textController: passwordController,
+                              hint: localText.password,
                             ),
                             const SizedBox(
                               height: 16,
@@ -161,7 +146,7 @@ class LoginScreen extends StatelessWidget {
                                               strokeWidth: 1.0,
                                             ),
                                           )
-                                        : Text(TextsRes.continueText,
+                                        : Text(localText.continueText,
                                             style:
                                                 const TextStyle(fontSize: 16)),
                                     onPressed: () {
@@ -181,7 +166,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                             Center(
                               child: Text(
-                                TextsRes.or,
+                                localText.or,
                                 style: const TextStyle(
                                     color: Colors.white, fontSize: 16),
                               ),
@@ -213,7 +198,7 @@ class LoginScreen extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 24),
                                         child: Text(
-                                          TextsRes.continueWithGoogle,
+                                          localText.continueWithGoogle,
                                           style: const TextStyle(
                                               fontSize: 16,
                                               color: Colors.black),
@@ -229,7 +214,7 @@ class LoginScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
-                                  TextsRes.dontHaveAnAccount,
+                                  localText.dontHaveAnAccount,
                                   style: const TextStyle(
                                       fontSize: 16, color: Colors.white),
                                 ),
@@ -241,7 +226,7 @@ class LoginScreen extends StatelessWidget {
                                     controller?.animateTo(1);
                                   },
                                   child: Text(
-                                    TextsRes.registration,
+                                    localText.registration,
                                     style: TextStyle(
                                       color: ColorsRes.fromHex(
                                           ColorsRes.primaryColor),
@@ -260,7 +245,7 @@ class LoginScreen extends StatelessWidget {
                               child: GestureDetector(
                                 onTap: () {},
                                 child: Text(
-                                  TextsRes.forgotYourPassword,
+                                  localText.forgotYourPassword,
                                   style: TextStyle(
                                     color: ColorsRes.fromHex(
                                         ColorsRes.primaryColor),

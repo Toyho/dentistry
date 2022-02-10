@@ -3,19 +3,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-
 class CustomeTextField extends StatefulWidget {
   String? hint = "";
   TextEditingController? textController;
   List<TextInputFormatter>? inputFormatters;
+  bool? obscureText = false;
 
   CustomeTextField({
     String? hint,
     TextEditingController? textController,
     List<TextInputFormatter>? inputFormatters,
+    bool? obscureText,
   })  : this.hint = hint,
         this.inputFormatters = inputFormatters,
         this.textController = textController,
+        this.obscureText = obscureText,
         super();
 
   @override
@@ -23,7 +25,6 @@ class CustomeTextField extends StatefulWidget {
 }
 
 class _CustomeTextFieldState extends State<CustomeTextField> {
-
   @override
   void initState() {
     super.initState();
@@ -37,6 +38,7 @@ class _CustomeTextFieldState extends State<CustomeTextField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      obscureText: widget.obscureText ?? false,
       controller: widget.textController,
       inputFormatters: widget.inputFormatters,
       decoration: InputDecoration(

@@ -29,7 +29,7 @@ class _AuthScreenState extends State<AuthScreen>
     Future.delayed(
         const Duration(microseconds: 500), () => animationController.forward());
     return Container(
-        color: Colors.white,
+        color: Theme.of(context).appBarTheme.backgroundColor,
         child: Stack(
           children: [
             Hero(
