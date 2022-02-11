@@ -434,10 +434,13 @@ class _CreateAppointmentsScreenState extends State<CreateAppointmentsScreen> {
                   ),
                 ),
               ],
-              controlsBuilder: (BuildContext context,
-                  {VoidCallback? onStepContinue, VoidCallback? onStepCancel}) {
-                return const SizedBox();
+              controlsBuilder: (BuildContext context, ControlsDetails details) {
+                return SizedBox();
               },
+              // controlsBuilder: (BuildContext context,
+              //     {VoidCallback? onStepContinue, VoidCallback? onStepCancel}) {
+              //   return const SizedBox();
+              // },
               currentStep: _index!,
             );
           },

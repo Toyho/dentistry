@@ -41,22 +41,25 @@ class DetailMessengerBloc
   }
 
   Future<void> _sendMessage(SendMessage event, Emitter<DetailMessengerState> emit) async {
-    FirebaseFirestore.instance
-        .collection('messages')
-        .doc(event.chatID)
-        .update({
-      'lastTime': FieldValue.serverTimestamp(),
-      'lastMsg': event.msg
-    });
-    FirebaseFirestore.instance
-        .collection('messages')
-        .doc(event.chatID)
-        .collection("messages")
-        .add({
-      'msg': event.msg,
-      'created': FieldValue.serverTimestamp(),
-      'uid': event.uid
-    });
+    if (event.msg != null && event.msg != "") {
+      FirebaseFirestore.instance
+          .collection('messages')
+          .doc(event.chatID)
+          .update({
+        'lastTime': FieldValue.serverTimestamp(),
+        'lastMsg': event.msg
+      });
+      FirebaseFirestore.instance
+          .collection('messages')
+          .doc(event.chatID)
+          .collection("messages")
+          .add({
+        'msg': event.msg,
+        'created': FieldValue.serverTimestamp(),
+        'uid': event.uid
+      });
+    }
+
   }
 
 }

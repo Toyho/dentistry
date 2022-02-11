@@ -15,7 +15,8 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
       : super(SettingsState(
             currentTheme: lightTheme,
             themeInfo: "light",
-            textInfo: "en")) {
+            textInfo: "ru",
+            locale: AllLocale.all[0])) {
     on<CurrentAppTheme>(_currentAppTheme);
     on<ChangeLocalization>(_changeLocalization);
   }
