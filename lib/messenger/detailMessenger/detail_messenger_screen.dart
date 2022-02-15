@@ -59,6 +59,8 @@ class DetailMessengerScreen extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           name!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),

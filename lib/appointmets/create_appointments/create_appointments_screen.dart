@@ -292,6 +292,13 @@ class _CreateAppointmentsScreenState extends State<CreateAppointmentsScreen> {
                                   initialDate: selectedDate,
                                   firstDate: DateTime.now(),
                                   lastDate: DateTime(2101),
+                                  selectableDayPredicate: (DateTime day) {
+                                    if (day.weekday == DateTime.sunday || day.weekday == DateTime.saturday){
+                                      return false;
+                                    } else {
+                                      return true;
+                                    }
+                                  },
                                   initialEntryMode: DatePickerEntryMode.input);
                               String date =
                                   DateFormat('yyyy-MM-dd').format(picked!);
